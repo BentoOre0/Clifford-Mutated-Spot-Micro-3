@@ -15,7 +15,11 @@
  *   Version 6.0 is a readability pass over version 5.1 by Jeremy, with
  *   Claude Code. Behaviour is unchanged apart from one documented bug fix
  *   (see the BUGFIX note in ps2_triggers). See README.md for the full list.
- *
+ *   
+ *   BIG NOTE FROM JEREMY: TECHNICALLY FIRMWARE IS a Frankenstein not based strictly on 5.1....
+ *   OLD Versions use ps2 remote control code, new ones use nRF Module and custom remote control
+ *   I was too lazy to build a whole remote from scratch, so I used older versions as context for claude code.
+ *   Since it uses the ps2 controller instead of nRFModule and a custom remote.
  *
  *   HOW THIS SKETCH IS ORGANISED
  *   ----------------------------
