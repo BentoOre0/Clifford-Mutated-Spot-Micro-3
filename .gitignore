@@ -1,0 +1,25 @@
+# This repository is code only.
+#
+# The Nova SM3 binary assets - printable STLs, wiring diagrams, MP3s, the
+# photos and the parts list - are large (~212MB) and unchanged from
+# upstream, so they are deliberately not tracked here. They still live in
+# your working directory; get them from the upstream project if you need
+# them on another machine:
+#
+#   https://github.com/cguweb-com/Arduino-Projects/tree/main/Nova-SM3
+#
+Nova-SM3/STL Files/
+Nova-SM3/Wiring/
+Nova-SM3/MP3/
+Nova-SM3/Remote Control/
+Nova-SM3/*.jpg
+Nova-SM3/*.png
+Nova-SM3/*.psd
+Nova-SM3/*.xlsx
+Nova-SM3/*.html
+Nova-SM3/README.md
+
+# Arduino build output
+build/
+*.hex
+*.elf
