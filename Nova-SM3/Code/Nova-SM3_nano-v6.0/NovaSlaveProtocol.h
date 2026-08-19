@@ -3,12 +3,14 @@
  *   Version: 6.0
  *   Version Date: 2026-08-19
  *
- *   Original Author:  Chris Locke - cguweb@gmail.com
+ *   Original Author:  Chris Locke - cguweb@gmail.com, Jeremy Aidan Yu
  *   Nova's website:  https://novaspotmicro.com
  *   GitHub Project:  https://github.com/cguweb-com/Arduino-Projects/tree/main/Nova-SM3
  *
  *   -----------------------------------------------------------------------
  *   MASTER <-> SLAVE COMMAND PROTOCOL
+ *   TL;DR from Jeremy -> i2c sends strings each character is a byte this is read as char because of ascii
+ *   Each ascii char corresponds to a single command :D Leaving this here to show that I read ts
  *   -----------------------------------------------------------------------
  *
  *   The Teensy (master) and the Nano (slave) talk over i2c using a
