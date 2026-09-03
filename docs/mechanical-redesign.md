@@ -1,7 +1,7 @@
 # Mechanical redesign
 
-How the Nova SM3 leg parts were adapted for servos the original design was never
-drawn around.
+How the Nova SM3 leg parts were adapted for servos the original design was never drawn
+around.
 
 ← [back to the main README](../README.md)
 
@@ -30,8 +30,8 @@ That distinction is the whole design.
 
 The horn interface is where the joint axis lives. Move it by a few millimetres and every
 link length in the leg changes, which means the gait tuning in
-[`Gaits.ino`](../Nova-SM3/Code/Nova-SM3_teensy-v6.0/Gaits.ino) — hundreds of hand-tuned
-multipliers arrived at on real hardware, with no inverse kinematics to fall back on —
+[`Gaits.ino`](../Nova-SM3/Code/Nova-SM3_teensy-v6.0/Gaits.ino), hundreds of hand-tuned
+multipliers arrived at on real hardware with no inverse kinematics to fall back on,
 becomes meaningless.
 
 Everything else is just structure. Structure can be rebuilt.
@@ -44,8 +44,8 @@ Not redrawn from scratch, and not edited as meshes either. The workflow was:
 
 1. **Import the original STL into SolidWorks as a base solid body.** This appears in the
    feature tree as `Imported1`.
-2. **Cut away** the geometry that assumed the original servo — pockets, bosses, brackets.
-3. **Add native parametric features** — sketches, boss-extrudes, cut-extrudes — for the
+2. **Cut away** the geometry that assumed the original servo: pockets, bosses, brackets.
+3. **Add native parametric features**, sketches, boss-extrudes and cut-extrudes, for the
    replacement servo.
 4. **Mirror** where a left/right pair is needed, and lay parts out on a print plate.
 
@@ -53,106 +53,133 @@ You can see this directly in the feature trees:
 
 <table>
 <tr>
-<td width="50%"><img src="../hardware/cad/modified/solidworks/coax-model.png" alt="Modified coax feature tree in SolidWorks"></td>
-<td width="50%"><img src="../hardware/cad/modified/solidworks/femur-feature-tree.png" alt="Modified femur feature tree in SolidWorks"></td>
+<td width="50%"><img src="../hardware/cad/modified/solidworks/coxa-solidworks-tree.png" alt="Modified coxa feature tree in SolidWorks"></td>
+<td width="50%"><img src="../hardware/cad/modified/solidworks/femur-solidworks-tree.png" alt="Modified femur feature tree in SolidWorks"></td>
 </tr>
 <tr>
-<td colspan="2"><em>Left: <code>coaxmodified_fixed</code>. The tree starts with <code>Imported1</code> — Chris Locke's STL — and then carries my own <code>Sketch2/4/7</code>, <code>Boss-Extrude1/4/5/11–15</code> and <code>Cut-Extrude1</code> on top of it. Right: the femur part, with roughly twenty-five sketch and feature operations. This is why the modification is parametric and re-editable rather than a one-way mesh edit.</em></td>
+<td colspan="2"><em>Left: the coxa part. The tree starts with <code>Imported1</code>, Chris Locke's STL, and then carries my own <code>Sketch2/4/7</code>, <code>Boss-Extrude1/4/5/11-15</code> and <code>Cut-Extrude1</code> on top of it. Right: the femur part, with roughly twenty-five sketch and feature operations. This is why the modification is parametric and re-editable rather than a one-way mesh edit.</em></td>
 </tr>
 </table>
 
-This matters for a practical reason as well as a provenance one: because the changes are
-parametric features on top of an imported body, a different servo can be accommodated by
-editing a sketch dimension rather than starting again.
+This matters practically as well as for provenance: because the changes are parametric
+features on an imported body, a different servo can be accommodated by editing a sketch
+dimension rather than starting again.
 
 ---
 
-## Part-by-part
+## Part by part
 
 All dimensions below are **measured from the mesh geometry** of the files in
 [`../hardware/cad/`](../hardware/cad/), not estimated or recalled.
 
 ### Hip / coxa
 
-![Coxa comparison](../hardware/cad/comparisons/coax-comparison.png)
+![Coxa comparison](../hardware/cad/comparisons/coxa-comparison.png)
 
-| | Original `SM3_Frame_LeftCoax` | Modified `coax_modified` | Δ |
+| | Original `SM3_Frame_LeftCoax` | Modified `SM3_Frame_Coxa_MOD` | Delta |
 |---|---|---|---|
-| Envelope | 37.59 × 46.13 × 57.50 mm | 37.45 × 49.77 × 57.97 mm | +3.64 mm across |
-| Volume | 23.88 cm³ | 26.21 cm³ | +9.8% |
-| Bodies | 1 | 1 | — |
+| Envelope | 37.59 x 46.13 x 57.50 mm | 37.45 x 49.77 x 57.97 mm | +3.64 mm across |
+| Volume | 23.88 cm3 | 26.21 cm3 | +9.8% |
 
-The axis-direction envelope changes by **0.14 mm** — that is the interface being held.
-The 3.64 mm growth is all in the transverse direction, which is the pocket opening up
-for a wider servo case.
+The axis-direction envelope changes by **0.14 mm**. That is the interface being held.
+The 3.64 mm growth is all transverse, which is the pocket opening up for a wider servo
+case.
 
 Structurally, the original's full-height flat back plate with an overhanging two-hole
 ear becomes a stepped C-bracket: a narrow vertical web, a broad cantilevered top shelf,
 and a separate lower foot with a boss.
 
-![Coxa servo pocket](../hardware/cad/comparisons/coax-servo-pocket.png)
+![Coxa servo pocket](../hardware/cad/comparisons/coxa-servo-pocket.png)
 
 Down the joint axis, the five-hole horn pattern is identical between the two parts. The
 pocket is not: rounded-square and concentric in the original, larger and angular with
 relieved corners and offset from the horn centreline in mine.
 
-### Femur
+### Femur: two parts merged into one
 
 ![Femur comparison](../hardware/cad/comparisons/femur-comparison.png)
 
-| | Original `SM3_Frame_LeftFemur` (main body) | Modified femur | Δ |
-|---|---|---|---|
-| Envelope | 138.54 × 44.47 × 34.66 mm | 147.13 × 68.49 × 35.66 mm | +8.6 / +24.0 / +1.0 mm |
-| Volume | 56.98 cm³ | 90.73 cm³ | +59% |
+This is the change I am most pleased with, and it is not a servo accommodation. It is a
+tolerance decision.
 
-The hip-end horn hub is preserved. The knee end is rebuilt completely: the original's
-slim slotted fork becomes a flat mounting pad with square posts and a boxed section that
-captures the knee servo.
+**In the original design the femur is two separately printed parts** that bolt together:
 
-A **59% increase in material** is a real cost, in print time, filament and — more
-importantly — in mass hanging off a joint that has to accelerate it. It is the price of
-the servo substitution, and it is worth stating plainly rather than hiding.
+| Original part | Envelope | Volume |
+|---|---|---|
+| `SM3_Frame_LeftFemur` (structural frame) | 138.54 x 44.47 x 34.66 mm | 56.98 cm3 |
+| `SM3_Cover_LeftFemur` (cover) | 156.79 x 55.47 x 40.45 mm | 33.26 cm3 |
+| **Total as an assembly** | | **90.24 cm3** |
+
+**I merged them into a single printed part:**
+
+| Modified part | Envelope | Volume |
+|---|---|---|
+| Femur body in `SM3_Frame_FemurTibia_MOD` | 147.13 x 68.49 x 35.66 mm | **90.73 cm3** |
+
+**Why.** Splitting the femur across a bolted joint puts the servo pocket and the knee
+mating features on opposite sides of that joint. Their relative position is then set by
+how the two halves seat against each other, which depends on print tolerance, warp and
+fastener preload, rather than by the model. With a replacement servo already forcing new
+pocket geometry, that stack was one variable too many: the dimensions and the mating
+connections needed to be right by construction, not by assembly.
+
+Merging them puts every mating feature in one solid, referenced off a single origin. The
+knee mate and the servo pocket cannot drift relative to each other because there is no
+longer a joint between them.
+
+**What it cost.** Almost nothing in material: **90.24 cm3 as two parts against 90.73 cm3
+as one, a difference of 0.5%.** What was removed was an assembly joint and its tolerance
+stack. The tradeoff is print orientation, since one larger part has fewer good
+orientations than two smaller ones, and reduced serviceability, because the cover no
+longer comes off independently.
+
+The hip-end servo-horn hub is preserved throughout, and the knee end is rebuilt around
+the replacement servo.
+
+> **On the evidence.** The two-into-one merge is my own account of the design intent.
+> What this repository independently shows is that the modified femur carries the
+> original frame's horn hub and profile with the cover's enclosed volume added, and that
+> the volumes agree to within 0.5%. Both are consistent with the merge.
 
 ### Lower leg
 
 ![Lower leg comparison](../hardware/cad/comparisons/tibia-comparison.png)
 
-| | Original `SM3_Frame_LeftTibia` | Modified lower-leg segment | Δ |
+| | Original `SM3_Frame_LeftTibia` | Modified lower-leg segment | Delta |
 |---|---|---|---|
-| Envelope | 129.35 × 100.09 × 38.48 mm | 99.64 × 37.52 × 38.52 mm | see note |
-| Volume | 30.27 cm³ | 66.15 cm³ | +118% |
+| Envelope | 129.35 x 100.09 x 38.48 mm | 99.64 x 37.52 x 38.52 mm | see note |
+| Volume | 30.27 cm3 | 66.15 cm3 | +118% |
 
-The original tibia is a slim curved arm — knee bore at one end, light bracket at the
-other. The modified segment keeps a knee pivot boss but carries a **full rectangular
+The original tibia is a slim curved arm, a knee bore at one end and a light bracket at
+the other. The modified segment keeps a knee pivot boss but carries a **full rectangular
 servo enclosure** where the original had an open bracket, which is where the doubled
 volume comes from.
 
-The envelope numbers are not directly comparable here, because the original tibia is a
-single part spanning knee to foot while the modified lower leg is split across more than
-one body. The separate lower part, `legbottom2`, is the one that carries the **TPU foot
-mounting** through from the original design:
+The envelope numbers are not directly comparable, because the original tibia is a single
+part spanning knee to foot while the modified lower leg is split across more than one
+body. The separate lower section carries the **TPU foot mounting** through from the
+original design:
 
-![legbottom2 in SolidWorks](../hardware/cad/modified/solidworks/tibia-legbottom2.png)
+![Lower tibia section in SolidWorks](../hardware/cad/modified/solidworks/tibia-lower-section.png)
 
-*`legbottom2` — the lower tibia section, with the tapered foot end that takes the TPU
-foot. The foot mounting was preserved deliberately: the TPU feet were one of the few
-original components I could still use.*
+*The lower tibia section, with the tapered foot end that takes the TPU foot. The foot
+mounting was preserved deliberately: the TPU feet were one of the few original
+components I could still use.*
 
 ---
 
-## About `legs_v67_printplate.stl`
+## About `SM3_Frame_FemurTibia_MOD.stl`
 
-The modified leg file is a **print plate containing two separate solid bodies**, not a
-single part. Splitting it by connected geometry gives:
+This file is a **print plate holding two separate solid bodies**, not one part. Splitting
+it by connected geometry gives:
 
-| Body | Triangles | Envelope | Volume |
-|---|---|---|---|
-| 0 — lower leg segment | 5,608 | 99.64 × 37.52 × 38.52 mm | 66.15 cm³ |
-| 1 — femur | 5,370 | 147.13 × 68.49 × 35.66 mm | 90.73 cm³ |
+| Body | Triangles | Envelope | Volume | Is |
+|---|---|---|---|---|
+| 0 | 5,608 | 99.64 x 37.52 x 38.52 mm | 66.15 cm3 | lower leg segment |
+| 1 | 5,370 | 147.13 x 68.49 x 35.66 mm | 90.73 cm3 | femur (frame + cover merged) |
 
-The comparison figures above render each body separately so that each is compared
-against the correct original part. The `v67` in the filename is not decoration — it is
-the revision that actually got printed.
+The comparison figures render each body separately so that each is compared against the
+correct original part.
 
 ---
 
@@ -163,13 +190,12 @@ worth much:
 
 - **No dimensioned drawings.** The comparisons are rendered geometry and measured
   envelopes, not a formal drawing package with tolerances.
-- **No modified tibia STL export.** The lower tibia part (`legbottom2`) is evidenced by
-  SolidWorks screenshots only; it was not exported as a standalone STL into the set I
-  archived.
+- **No modified tibia STL export.** The lower tibia section is evidenced by SolidWorks
+  screenshots only; it was not exported as a standalone STL into the archived set.
 - **No print settings or material record.** Layer height, infill, material and
   orientation were not logged, and I am not going to reconstruct them from memory.
-- **No load analysis.** The parts were sized by judgement and iteration — the `v67`
-  revision number is a fair summary of the method — not by FEA or measured joint torque.
+- **No load analysis.** Parts were sized by judgement and iteration, not by FEA or
+  measured joint torque.
 - **Which specific servos.** I have not recorded the exact model of the replacement
   servos anywhere in this repository, which in hindsight is the single most useful thing
   I could have written down.
