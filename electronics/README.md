@@ -127,6 +127,12 @@ a crossing can no longer be read as a junction.
 | NRF24L01 plus a custom-built remote | **Yahboom 2.4 G PS2 receiver** | On the PS2-COM header: MISO-DAT-D7, MOSI-CMD-D8, CS-SEL-D9, SCK-CLK-D10, ACK n/c, **VCC on 3.3 V**, GND2. The D13 (SCK) drop and the NRF 22 uF cap are deleted. D9/D10 are shared with the NRF footprint, **so that footprint must stay unpopulated.** |
 | DFPlayer Mini | **DFPlayer PRO (DFR0768)**, 3.3 to 5 V | Speaker moved to R+ / R- (right channel). VIN / GND / RX / TX unchanged; left channel, DAC and button pins unused. |
 
+The receiver itself had nowhere to live, since the body was designed around a radio
+soldered to the board. It ended up in a backpack borrowed from the Nova SM2, mounted on a
+new back panel so it protrudes from the body like a tail and keeps its antenna outside the
+electronics bay. That is documented on the
+[mechanical page](../mechanical/README.md#the-tail-borrowing-a-backpack-from-the-nova-sm2).
+
 Revision 5 is a caveat I put on the drawing rather than a change: the artwork for the PS2
 receiver and the DFR0768 is **drawn, not photographic**, so check the vendor pinout before
 wiring.

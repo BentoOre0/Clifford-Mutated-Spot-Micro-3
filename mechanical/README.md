@@ -202,6 +202,49 @@ tapering lower arm and foot end below it come from the original.*
 
 ---
 
+## The tail: borrowing a backpack from the Nova SM2
+
+Swapping the nRF24L01 for a PS2 receiver
+([why](../firmware/README.md#why-ps2-and-not-the-nrf24l01)) left a part with nowhere to
+live. The receiver is a bare module on a flying lead, and the SM3 body has no provision for
+it, because the design it came from expects a radio soldered to the board.
+
+Rather than draw an enclosure from nothing, I took the **backpack from the Nova SM2**, the
+earlier robot in the same lineage, and mounted it on a new back panel. It houses the
+receiver and **sticks out of the back like a tail**, which keeps the antenna outside the
+printed body and out of the electronics bay.
+
+![Backpack and back panel](cad/comparisons/backpack-tail.png)
+
+| Part | Whose | Envelope | Volume |
+|---|---|---|---|
+| `SM2_BackPackBody.stl` | upstream Nova SM2 | 30.10 x 68.00 x 60.75 mm | 24.34 cm3 |
+| `SM2_BackPackCover.stl` | upstream Nova SM2 | 27.90 x 42.50 x 72.20 mm | 22.11 cm3 |
+| `modified_backpanel.stl` | **mine** | 61.02 x 99.57 x 7.04 mm | 8.62 cm3 |
+
+The two backpack parts are upstream geometry and are **not my work**. The back panel they
+mount to is: at 7 mm thick it is essentially a flat plate, and its job is to carry the
+backpack on the outside of the body while presenting a clean face on the inside.
+
+![The tail on the assembled robot](media/sm2-backpack-tail.jpg)
+
+*The black module protruding from the top rear of the body.*
+
+**Fitting it was hand work, not CAD.** The mounting holes were **melted through with a
+soldering iron** rather than printed or drilled, then the assembly was secured with inserts
+and nuts. That is not the elegant solution and I am not going to present it as one, but
+merging two parts from different revisions of a project is exactly where a printed part
+stops agreeing with a model, and a soldering iron is a reasonable answer to a hole that
+needs to be in a slightly different place than the file says.
+
+The archived panel is `finalnewbackpanel_fixed.stl` from my working set: the `_fixed`
+suffix is the mesh-repair step from the
+[workflow above](#how-the-parts-were-modified). The unrepaired version has the same
+envelope and the same 8.62 cm3 volume with 476 fewer triangles, so only the shell integrity
+differs.
+
+---
+
 ## Printing and first assembly
 
 ![First assembly of the printed chassis](media/printed-chassis-first-assembly.jpg)
@@ -215,8 +258,10 @@ grey femurs and coax brackets.*
 
 ### [`cad/original/`](cad/original/): Chris Locke's, unmodified
 
-Kept under his filenames, byte-for-byte as published, and never edited in place. Only the
-parts with a modified counterpart are mirrored here.
+Kept under upstream filenames, byte-for-byte as published, and never edited in place. Only
+the parts with a modified counterpart, or that I reused directly, are mirrored here. The
+two `SM2_` files are the backpack, which comes from the earlier Nova SM2 rather than from
+the SM3 set.
 
 | File | Triangles | Envelope (mm) | Volume |
 |---|---|---|---|
@@ -224,6 +269,8 @@ parts with a modified counterpart are mirrored here.
 | `SM3_Frame_LeftFemur.stl` | 22,192 | 138.54 x 51.09 x 34.66 | 66.02 cm3 |
 | `SM3_Cover_LeftFemur.stl` | 12,920 | 156.79 x 55.47 x 40.45 | 33.26 cm3 |
 | `SM3_Frame_LeftTibia.stl` | 4,332 | 129.35 x 100.09 x 38.48 | 30.27 cm3 |
+| `SM2_BackPackBody.stl` | 4,524 | 30.10 x 68.00 x 60.75 | 24.34 cm3 |
+| `SM2_BackPackCover.stl` | 2,180 | 27.90 x 42.50 x 72.20 | 22.11 cm3 |
 
 ### [`cad/modified/`](cad/modified/): mine
 
@@ -236,6 +283,7 @@ Both the STL and the native SolidWorks part, so the geometry stays re-editable.
 | `modified_femur_body-2.stl` | 5,608 | 99.64 x 37.52 x 38.52 | 66.15 cm3 | femur, part 2 |
 | `modified_femur_plate.stl` | 10,978 | 149.64 x 109.99 x 38.52 | 156.88 cm3 | both femur bodies, as printed |
 | `modified_tibia.stl` | 3,032 | 36.02 x 155.10 x 56.84 | 83.94 cm3 | knee to foot, one piece |
+| `modified_backpanel.stl` | 10,492 | 61.02 x 99.57 x 7.04 | 8.62 cm3 | back panel carrying the SM2 backpack |
 
 The native SolidWorks parts are alongside them: `modified_coax.SLDPRT`,
 `modified_femur_plate.SLDPRT` and `modified_tibia.SLDPRT`. These are the re-editable
@@ -255,8 +303,9 @@ visible.
 
 ### [`cad/comparisons/`](cad/comparisons/)
 
-Rendered directly from the STL files above at a single shared scale, with the measured
-numbers printed on the figure. Nothing here is drawn by hand and all of it regenerates from
+`coax-comparison.png`, `coax-servo-pocket.png`, `femur-comparison.png`,
+`tibia-comparison.png` and `backpack-tail.png`, rendered directly from the STL files above
+at a single shared scale, with the measured numbers printed on the figure. Nothing here is drawn by hand and all of it regenerates from
 the geometry alone.
 
 ---
