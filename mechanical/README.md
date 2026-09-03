@@ -61,6 +61,13 @@ out to be **axially aligned with the servo horn and with the bearing boss**, whi
 single extrude cut along that axis cleared it. A piece of luck in the original design's
 favour, and the reason that end did not need rebuilding too.
 
+![RDS3218 sitting in its U bracket](media/rds3218-in-u-bracket.jpg)
+
+*The arrangement the parts had to be redesigned for. The servo is held by the aluminium U
+bracket wrapped around it, not by screws through its own case, and the printed part is
+built to capture that bracket. The horn, with its five-hole pattern, is the one feature
+carried over unchanged from the original design. The magenta label reads 20 kg.*
+
 <table>
 <tr>
 <td width="50%"><img src="media/leg-assembled.jpg" alt="Assembled leg, front"></td>
@@ -158,6 +165,11 @@ because it makes the part printable.
 **+58% volume.** That is the honest cost of the substitution: the RDS3218 in its U bracket
 is a physically larger thing to carry than a DS3218 bolted through four holes, and the
 structure around it grew accordingly.
+
+![The joint between the two femur parts](media/femur-two-part-joint.jpg)
+
+*The seam on the assembled robot. The two femur parts meet along that line, with a tie
+around the joint and a screw boss visible below it.*
 
 Both parts are on one plate in
 [`modified_femur_plate.stl`](cad/modified/modified_femur_plate.stl), which is the file that
