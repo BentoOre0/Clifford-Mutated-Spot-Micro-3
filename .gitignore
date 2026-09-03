@@ -1,12 +1,15 @@
-# This repository is code only.
+# The firmware tree tracks code only.
 #
-# The Nova SM3 binary assets - printable STLs, wiring diagrams, MP3s, the
-# photos and the parts list - are large (~212MB) and unchanged from
-# upstream, so they are deliberately not tracked here. They still live in
-# your working directory; get them from the upstream project if you need
-# them on another machine:
+# Upstream's bulk binary assets - the full printable STL set, the original
+# wiring diagrams, the MP3s, the photos and the parts list - are large
+# (~212MB) and unchanged from upstream, so they are deliberately not tracked.
+# Get them from the upstream project if you need them:
 #
 #   https://github.com/cguweb-com/Arduino-Projects/tree/main/Nova-SM3
+#
+# The curated hardware documentation for THIS fork - my modified CAD, the
+# before/after comparison figures and the build photography - lives under
+# hardware/ and IS tracked. See hardware/cad/README.md.
 #
 Nova-SM3/STL Files/
 Nova-SM3/Wiring/
