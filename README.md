@@ -18,7 +18,7 @@ and the calipers. The redesign was measurement-driven.*
 **This is not my design.** The Nova SM3, its architecture, its gaits, its servo motion
 engine and its master/slave split, is Chris Locke's work, and the firmware in this repo
 is his code. What is mine is everything that had to change when the specified hardware
-turned out to be unavailable where I live: **I redesigned the hip, femur and tibia leg
+turned out to be unavailable where I live: **I redesigned the coax, femur and tibia leg
 parts around servos with different mounting geometry, merged the two-piece femur into a
 single printed part to fix its mating tolerances, printed and assembled the whole robot,
 re-architected the power distribution and corrected a wiring fault in the reference
@@ -53,7 +53,7 @@ everything around it.** That rule is visible in every comparison below.
 |---|---|---|
 | Robot architecture, gaits, `AsyncServo` motion engine, master/slave I2C protocol | all of it | |
 | Original STL geometry | yes | used as the base body, then modified |
-| **Hip (coxa), femur, tibia geometry** | original geometry | **redesigned around replacement servos** |
+| **Coax, femur and tibia geometry** | original geometry | **redesigned around replacement servos** |
 | **Femur as a two-piece frame + cover** | two printed parts | **merged into one printed part** |
 | Printing and assembly of the whole robot | | **mine** |
 | **Power distribution architecture** | cascaded converters | **reworked to parallel** |
@@ -72,36 +72,42 @@ Every figure below is rendered directly from the actual STL files in
 [`hardware/cad/`](hardware/cad/), original and modified, at matched camera angles.
 Dimensions and volumes are measured from the mesh geometry, not estimated.
 
-### Hip / coxa bracket
+### Coax (hip) bracket
 
-![Original vs modified coxa bracket](hardware/cad/comparisons/coxa-comparison.png)
+![Original vs modified coax bracket](hardware/cad/comparisons/coax-comparison.png)
 
 The servo-horn boss, its arc rib and the retaining tabs carry straight over, and the
 envelope along the joint axis matches to within **0.14 mm**. Everything that holds the
 servo body is new: the original's full-height back plate and overhanging two-hole ear
 become a stepped C-bracket with a cantilevered top shelf and a separate lower foot.
 
-![Servo pocket, viewed down the joint axis](hardware/cad/comparisons/coxa-servo-pocket.png)
+![Servo pocket, viewed down the joint axis](hardware/cad/comparisons/coax-servo-pocket.png)
 
 Looking straight down the joint axis makes the point cleanly: **same five-hole horn
 pattern, different pocket.**
 
 ### Femur: two parts merged into one
 
-![Original two-piece femur vs merged single part](hardware/cad/comparisons/femur-comparison.png)
+![Original two-piece femur against my merged single part](hardware/cad/comparisons/femur-comparison.png)
 
-The original femur is **two separately printed parts that bolt together**, a structural
-frame and a cover. **I merged them into one part.** Splitting the femur across a joint
-meant the servo pocket and the knee mating features were split across two prints, so
-their alignment depended on how the two halves seated rather than on the model. Merging
-them puts every mating feature in one solid, referenced off one origin, and removes the
-assembly joint and its tolerance stack.
+In the original design the femur is **two separately printed parts that bolt together**,
+a structural frame and a cover. The figure shows them apart, then in their assembled
+position (both original STLs share a coordinate origin, so that centre view is the real
+fit, not an arrangement I posed), then my version, where the two are **merged into one
+printed solid**.
 
-The merge is close to material-neutral: **57.0 + 33.3 = 90.3 cm3 as two parts, against
-90.7 cm3 as one, a difference of 0.5%.** What was removed was a tolerance stack, not
-mass.
+Splitting the femur across that bolted joint put the servo pocket and the knee mating
+features on opposite sides of it, so their relative position depended on how the halves
+seated together rather than on the model. With a replacement servo already forcing new
+pocket geometry, that was one variable too many: the dimensions and the mating
+connections had to be right by construction. Merging them puts every mating feature in
+one solid, referenced off one origin.
 
-### Lower leg
+The merge is close to material-neutral: **56.98 + 33.26 = 90.24 cm3 as two parts,
+against 90.73 cm3 as one, a difference of 0.5%.** What was removed was a tolerance
+stack, not mass.
+
+### Tibia (lower leg)
 
 ![Original vs modified lower leg](hardware/cad/comparisons/tibia-comparison.png)
 
@@ -258,7 +264,7 @@ and the revisions are mine.
 [Nova SM3 electronics-mounting remix](https://www.thingiverse.com/thing:7131451)
 (CC BY-SA) is in my working files as a reference for mounting the PCA9685 and the
 XL6009 buck converter. Those parts are **not** included here and are **not** my work;
-the geometry documented as mine is the hip, femur and tibia only.
+the geometry documented as mine is the coax, femur and tibia only.
 
 **Modifications, mechanical redesign, electronics and v6.0 firmware, Jeremy Aidan Yu**,
 with the v6.0 restructure done with assistance from Claude Code.

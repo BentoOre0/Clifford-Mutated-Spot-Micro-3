@@ -36,32 +36,34 @@ included, so the geometry is re-editable rather than a dead mesh.
 
 | File | Contents |
 |---|---|
-| `SM3_Frame_Coxa_MOD.stl` / `.SLDPRT` | Hip bracket. 3,406 tris, 37.45 x 49.77 x 57.97 mm, 26.21 cm3 |
-| `SM3_Frame_FemurTibia_MOD.stl` / `.SLDPRT` | **Two bodies on one print plate**, see below |
+| `SM3_Frame_Coax_MOD.stl` / `.SLDPRT` | Coax (hip) bracket |
+| `SM3_Frame_Femur_MOD.stl` | Femur, the original frame and cover merged into one part |
+| `SM3_Frame_Tibia_MOD.stl` | Lower leg segment |
+| `SM3_Frame_FemurTibia_MOD_PrintPlate.stl` / `.SLDPRT` | Femur and tibia laid out together as actually printed |
 | `solidworks/` | Screenshots of the models and feature trees |
 
-`SM3_Frame_FemurTibia_MOD.stl` splits by connected geometry into:
+Measured from the mesh geometry:
 
-| Body | Triangles | Envelope (mm) | Volume | Is |
-|---|---|---|---|---|
-| 0 | 5,608 | 99.64 x 37.52 x 38.52 | 66.15 cm3 | lower leg segment |
-| 1 | 5,370 | 147.13 x 68.49 x 35.66 | 90.73 cm3 | femur, frame + cover merged |
+| Part | Triangles | Envelope (mm) | Volume |
+|---|---|---|---|
+| `SM3_Frame_Coax_MOD` | 3,406 | 37.45 x 49.77 x 57.97 | 26.21 cm3 |
+| `SM3_Frame_Femur_MOD` | 5,370 | 147.13 x 68.49 x 35.66 | 90.73 cm3 |
+| `SM3_Frame_Tibia_MOD` | 5,608 | 99.64 x 37.52 x 38.52 | 66.15 cm3 |
 
-Body 1 is the change worth noting: the original femur is two printed parts that bolt
-together (56.98 + 33.26 = 90.24 cm3), and this is those two merged into one solid
-(90.73 cm3, a 0.5% difference). See
+`SM3_Frame_FemurTibia_MOD_PrintPlate` is the file that was actually printed, holding the
+femur and tibia as two bodies on one plate. `SM3_Frame_Femur_MOD.stl` and
+`SM3_Frame_Tibia_MOD.stl` are those two bodies separated out, so each part can be used
+on its own. The triangles are unchanged from the plate; only the file container differs.
+
+The femur is the part worth looking at. In the original design it is **two printed parts
+that bolt together**, a frame and a cover (56.98 + 33.26 = 90.24 cm3). Here it is those
+two merged into a single solid (90.73 cm3, a 0.5% difference). See
 [the redesign write-up](../../docs/mechanical-redesign.md#femur-two-parts-merged-into-one)
 for why.
 
 The SolidWorks trees begin with `Imported1`, the original STL imported as a base body,
 followed by my own sketches and features. That is the provenance: modification on top of
 the original, not a redraw and not a mesh edit.
-
-### A note on naming
-
-Upstream spells the hip part "Coax"; the anatomical term, and the one the firmware uses
-in its servo names (`RFC` = right front **coxa**), is "coxa". My files use `Coxa`. They
-are the same joint.
 
 ## `comparisons/` (generated figures)
 
@@ -70,8 +72,8 @@ measured dimensions. Regenerable from the geometry alone; nothing here is drawn 
 
 | Figure | Shows |
 |---|---|
-| `coxa-comparison.png` | Hip bracket, original vs modified |
-| `coxa-servo-pocket.png` | Down the joint axis: same horn pattern, different pocket |
+| `coax-comparison.png` | Coax bracket, original vs modified |
+| `coax-servo-pocket.png` | Down the joint axis: same horn pattern, different pocket |
 | `femur-comparison.png` | Original frame + cover, against my merged single part |
 | `tibia-comparison.png` | Lower leg, original vs modified |
 

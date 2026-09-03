@@ -53,11 +53,11 @@ You can see this directly in the feature trees:
 
 <table>
 <tr>
-<td width="50%"><img src="../hardware/cad/modified/solidworks/coxa-solidworks-tree.png" alt="Modified coxa feature tree in SolidWorks"></td>
+<td width="50%"><img src="../hardware/cad/modified/solidworks/coax-solidworks-tree.png" alt="Modified coax feature tree in SolidWorks"></td>
 <td width="50%"><img src="../hardware/cad/modified/solidworks/femur-solidworks-tree.png" alt="Modified femur feature tree in SolidWorks"></td>
 </tr>
 <tr>
-<td colspan="2"><em>Left: the coxa part. The tree starts with <code>Imported1</code>, Chris Locke's STL, and then carries my own <code>Sketch2/4/7</code>, <code>Boss-Extrude1/4/5/11-15</code> and <code>Cut-Extrude1</code> on top of it. Right: the femur part, with roughly twenty-five sketch and feature operations. This is why the modification is parametric and re-editable rather than a one-way mesh edit.</em></td>
+<td colspan="2"><em>Left: the coax part. The tree starts with <code>Imported1</code>, Chris Locke's STL, and then carries my own <code>Sketch2/4/7</code>, <code>Boss-Extrude1/4/5/11-15</code> and <code>Cut-Extrude1</code> on top of it. Right: the femur part, with roughly twenty-five sketch and feature operations. This is why the modification is parametric and re-editable rather than a one-way mesh edit.</em></td>
 </tr>
 </table>
 
@@ -72,11 +72,11 @@ dimension rather than starting again.
 All dimensions below are **measured from the mesh geometry** of the files in
 [`../hardware/cad/`](../hardware/cad/), not estimated or recalled.
 
-### Hip / coxa
+### Coax (hip) bracket
 
-![Coxa comparison](../hardware/cad/comparisons/coxa-comparison.png)
+![Coax comparison](../hardware/cad/comparisons/coax-comparison.png)
 
-| | Original `SM3_Frame_LeftCoax` | Modified `SM3_Frame_Coxa_MOD` | Delta |
+| | Original `SM3_Frame_LeftCoax` | Modified `SM3_Frame_Coax_MOD` | Delta |
 |---|---|---|---|
 | Envelope | 37.59 x 46.13 x 57.50 mm | 37.45 x 49.77 x 57.97 mm | +3.64 mm across |
 | Volume | 23.88 cm3 | 26.21 cm3 | +9.8% |
@@ -89,7 +89,7 @@ Structurally, the original's full-height flat back plate with an overhanging two
 ear becomes a stepped C-bracket: a narrow vertical web, a broad cantilevered top shelf,
 and a separate lower foot with a boss.
 
-![Coxa servo pocket](../hardware/cad/comparisons/coxa-servo-pocket.png)
+![Coax servo pocket](../hardware/cad/comparisons/coax-servo-pocket.png)
 
 Down the joint axis, the five-hole horn pattern is identical between the two parts. The
 pocket is not: rounded-square and concentric in the original, larger and angular with
@@ -114,7 +114,7 @@ tolerance decision.
 
 | Modified part | Envelope | Volume |
 |---|---|---|
-| Femur body in `SM3_Frame_FemurTibia_MOD` | 147.13 x 68.49 x 35.66 mm | **90.73 cm3** |
+| `SM3_Frame_Femur_MOD` | 147.13 x 68.49 x 35.66 mm | **90.73 cm3** |
 
 **Why.** Splitting the femur across a bolted joint puts the servo pocket and the knee
 mating features on opposite sides of that joint. Their relative position is then set by
@@ -141,7 +141,7 @@ the replacement servo.
 > original frame's horn hub and profile with the cover's enclosed volume added, and that
 > the volumes agree to within 0.5%. Both are consistent with the merge.
 
-### Lower leg
+### Tibia (lower leg)
 
 ![Lower leg comparison](../hardware/cad/comparisons/tibia-comparison.png)
 
@@ -168,20 +168,20 @@ components I could still use.*
 
 ---
 
-## About `SM3_Frame_FemurTibia_MOD.stl`
+## About the print plate
 
-This file is a **print plate holding two separate solid bodies**, not one part. Splitting
-it by connected geometry gives:
+`SM3_Frame_FemurTibia_MOD_PrintPlate.stl` is the file that was actually printed, and it
+holds **two separate solid bodies**, the femur and the tibia, laid out on one plate:
 
 | Body | Triangles | Envelope | Volume | Is |
 |---|---|---|---|---|
-| 0 | 5,608 | 99.64 x 37.52 x 38.52 mm | 66.15 cm3 | lower leg segment |
 | 1 | 5,370 | 147.13 x 68.49 x 35.66 mm | 90.73 cm3 | femur (frame + cover merged) |
+| 0 | 5,608 | 99.64 x 37.52 x 38.52 mm | 66.15 cm3 | tibia, lower leg segment |
 
-The comparison figures render each body separately so that each is compared against the
+`SM3_Frame_Femur_MOD.stl` and `SM3_Frame_Tibia_MOD.stl` are those two bodies separated
+out so each can be used on its own. The geometry is untouched; only the file container
+differs. The comparison figures use the separated bodies so each is measured against the
 correct original part.
-
----
 
 ## What is not documented here
 
