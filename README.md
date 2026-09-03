@@ -93,6 +93,11 @@ Restructured into something maintainable, with two real bugs found on the way.
 </tr>
 </table>
 
+> ### [Open the full corrected wiring diagram](electronics/wiring/wiring-diagram-modified.png)
+>
+> 6000 x 4712, every pin labelled, every revision marked on the sheet. The upstream
+> pictogram had a short in it; this is the corrected drawing.
+
 ---
 
 ## Status

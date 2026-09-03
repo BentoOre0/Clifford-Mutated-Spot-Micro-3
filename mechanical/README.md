@@ -179,11 +179,37 @@ structure around it grew accordingly.
 *The seam on the assembled robot. The two femur parts meet along that line, with a tie
 around the joint and a screw boss visible below it.*
 
-Both parts are on one plate in
-[`modified_femur_plate.stl`](cad/modified/modified_femur_plate.stl), which is the file that
-was actually printed. `modified_femur_body-1.stl` and `modified_femur_body-2.stl` are those
-same two bodies separated out so each can be inspected or printed on its own. The geometry
-is untouched; only the file container differs.
+### Why both femur halves live in one file
+
+The two bodies are modelled together in a **single SolidWorks part document**, not as an
+assembly of two parts, and that was a deliberate compromise rather than laziness.
+
+The obvious approach is an assembly: two part files, mated together. That does not work
+well here. These bodies start life as **imported STL geometry**, which arrives with no
+sketches, no datums and nothing fully defined, so there is nothing dependable to mate
+against. Aligning them that way was, in practice, very tricky and not trustworthy.
+
+Modelling both halves in one document solves it. Each half can be **built off the other**
+directly, because they share one origin and both are visible at once while working.
+Alignment stops being something an assembly has to maintain and becomes a property of the
+model. They are then spaced far enough apart in that same document to be printable exactly
+as they sit, which is why the file doubles as the print plate.
+
+![Femur mating features](cad/modified/solidworks/femur-mating-features.jpg)
+
+*Both femur halves in the one document (`finalprintv67legs`, `Solid Bodies(3)`), spaced for
+printing and modelled against each other. The block protrusions on the facing surfaces are
+the mating features.*
+
+**How the halves join:** a **block protrusion** locates the two parts against each other,
+and a screw pulls them together onto a **nut hidden inside the print**, sitting in a pocket
+that closes over as the part is built. Nothing protrudes, and no nut has to be held with a
+spanner during assembly.
+
+[`modified_femur_plate.stl`](cad/modified/modified_femur_plate.stl) is that document
+exported, and it is the file that was actually printed. `modified_femur_body-1.stl` and
+`modified_femur_body-2.stl` are the same two bodies separated out so each can be inspected
+on its own. The geometry is untouched; only the file container differs.
 
 ### Tibia (one printed part)
 
@@ -217,10 +243,18 @@ Swapping the nRF24L01 for a PS2 receiver
 live. The receiver is a bare module on a flying lead, and the SM3 body has no provision for
 it, because the design it came from expects a radio soldered to the board.
 
+The rear panel had to be reworked anyway. **I fitted a voltmeter**, the red seven-segment
+display visible on the assembled robot, and the original panel was not big enough to take
+it. So the panel was **enlarged** to carry the meter, and while it was being redrawn it
+also became the mounting point for the receiver.
+
 Rather than draw an enclosure from nothing, I took the **backpack from the Nova SM2**, the
-earlier robot in the same lineage, and mounted it on a new back panel. It houses the
-receiver and **sticks out of the back like a tail**, which keeps the antenna outside the
-printed body and out of the electronics bay.
+earlier robot in the same lineage, and put it on that panel. It houses the receiver and
+**sticks out of the back like a tail**, which keeps the antenna outside the printed body
+and out of the electronics bay.
+
+The panel uses the same fastening approach as the femur: **hidden nuts and screws**, with
+the nuts captured inside the print rather than exposed on the outside face.
 
 ![Backpack and back panel](cad/comparisons/backpack-tail.png)
 

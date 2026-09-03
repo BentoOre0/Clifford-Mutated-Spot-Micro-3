@@ -37,30 +37,24 @@ case. That is the constraint everything else has to survive.
 
 ---
 
-## The reference design had gone stale
+## The pictogram was wrong. The schematic is what proved it
 
-This is the part of the project I would most want someone to look at.
+The upstream project ships two wiring documents, a **schematic** and a **pictogram**, and
+they do not agree with each other. The schematic is accurate. The pictogram belongs to an
+older, deprecated revision, and following it as drawn does not give you a working robot.
 
-The published Nova SM3 wiring documentation is for an **older, deprecated revision** of the
-project. It does not describe the hardware as it actually is, and following it as drawn
-does not give you a working robot. I did not discover that by reading. I discovered it by
-printing the drawings out and tracing every net by hand against the real board.
+Finding that out is not something you can do by reading. Both drawings had to be printed
+and every net traced by hand against the real board.
 
-![Schematic used as a continuity checklist](wiring/schematic-continuity-check.jpg)
+![Schematic used as a test sheet](wiring/schematic-continuity-check.jpg)
 
-*Chris Locke's REV 5.1 schematic, printed and used as a live checklist. Blue ticks are nets
-I confirmed with a multimeter. Green highlighter follows the ones I was chasing. The
+*Chris Locke's REV 5.1 schematic, printed and used as a live test sheet. This is the
+drawing that held up under testing, which is why it became my reference. Blue ticks are
+nets I confirmed with a multimeter, green highlighter follows the ones I was chasing, the
 PS2-COM header is hand-labelled DAT / CMD / SEL / CLK because that mapping had to be worked
-out. Bottom right, `cont gnd` with a tick: ground continuity confirmed. Top right, next to
-the GND and 6.8V-VIN terminal blocks, the note that mattered:* **`Shorted!`** *, and beside
-it, `short? i think so... (es :)`.*
+out, and `cont gnd` with a tick at the bottom records ground continuity confirmed.*
 
-That annotation is the moment the investigation turned. Working through the drawing node by
-node, the terminal arrangement it specified did not agree with the hardware, and taking it
-literally put rails together that must not touch. The errors were in the documentation, not
-in the build.
-
-The same treatment was applied to the pictogram:
+Checked against that, the pictogram did not hold up:
 
 ![Pictogram traced by hand](wiring/wiring-diagram-annotated-by-hand.jpg)
 
@@ -72,13 +66,15 @@ the PIR sensors, the RGB dimmer pot and the OLED power, and the PIR pin question
 That last question resolved itself in code: `Test_PIR.ino` defines `PIR_FRONT 4`,
 `PIR_LEFT 5`, `PIR_RIGHT 6`, so the pencilled guess was right.
 
-The output of all of this tracing is a **corrected drawing**, which carries its own revision
-block:
+The output of all of this tracing is a **corrected pictogram**, which carries its own
+revision block:
 
 ![Revision block](wiring/wiring-revision-notes.png)
 
-→ **Full diagram: [`wiring/wiring-diagram-modified.png`](wiring/wiring-diagram-modified.png)**
-(6000 x 4712, open it full size to read pin labels)
+> ## [Open the full corrected wiring diagram](wiring/wiring-diagram-modified.png)
+>
+> `electronics/wiring/wiring-diagram-modified.png`, 6000 x 4712. Every pin is labelled and
+> every revision is marked on the sheet. This is the drawing to build from.
 
 The base artwork is Chris Locke's. The revisions and the revision block are mine. It is
 committed as the drawing itself rather than redrawn or summarised, so the documentation and
@@ -87,6 +83,17 @@ the artifact cannot drift apart the way the upstream pair did.
 ---
 
 ## Revision 1: cascaded converters reworked to parallel
+
+**The symptom.** Startup was inconsistent. Putting a multimeter across the buck converter
+output, the voltage came up differently from one power-on to the next. But when I bypassed
+the normal startup path and hot-wired the converter straight to the pack, it read steady
+every time.
+
+**The hypothesis.** A rail that is fine on a direct connection and misbehaves when brought
+up through its own supply path is not a dead converter. That difference is a **source
+impedance** problem: something upstream was sagging under the startup load that the pack
+itself did not. Which meant the answer was in the power tree, so the power tree was what I
+went and read.
 
 **What the reference design did.** The XL6009 5.4 V converter took its input from the
 **6.8 V converter's output block**. The two converters therefore ran **in series**.
@@ -98,22 +105,25 @@ a brownout on the logic rails.
 
 **The fix.** I moved the XL6009 input **off** the 6.8 V output block and onto the switched
 battery pair at the 6.8 V buck input. **Both converters now run in parallel off the pack**,
-so neither sees the other's output impedance. The rework also freed one VIN and one GND
-terminal.
+so neither sees the other's output impedance, which is exactly the thing the startup
+behaviour had pointed at. The rework also freed one VIN and one GND terminal, and startup
+became repeatable.
 
 > Revision 1, in the drawing's own words: *"XL6009 5.4V converter: input moved OFF the 6.8v
 > Output 'VIN' block. +IN / -IN now tap the switched battery pair at the 6.8V buck input, so
 > both converters run in PARALLEL off the pack instead of cascaded. One VIN and one GND
 > terminal freed."*
 
-## Revision 2: a ground that dead-ended on a power rail
+## Revision 2: the PIR short
 
-While redrawing the sensor wiring I found that **the PIR ground drop terminated on the
-`VIN PIR, PS2, SW` +5 V rail** instead of the ground rail.
+This is the fault that made the exercise worth doing. On the pictogram, **the PIR ground
+drop terminated on the `VIN PIR, PS2, SW` +5 V rail** instead of the ground rail.
 
-A ground return landing on a power rail is not subtle in its effects, but it is very easy
-to miss on a dense pictogram, because the two rails run parallel and that crossing looks
-like every other crossing on the sheet.
+Wired as drawn, that ties a ground return straight to a +5 V rail, which is a short across
+the sensor supply. It is not subtle in its effects, but it is very easy to miss on a dense
+pictogram, because the two rails run parallel and that crossing looks like every other
+crossing on the sheet. It is also the sort of error that survives in a document precisely
+because nobody rebuilds from the pictogram once the board works.
 
 So I fixed both the fault and the reason it was missable: the ground drop now lands on the
 GND rail, and **the four remaining +5 V / GND crossings were redrawn as explicit
@@ -170,11 +180,20 @@ wiring and hardware, not the main sketch.
 Each carries an explicit pass criterion, so "it did something" does not get mistaken for
 "it works".
 
-![PS2 bring-up on the bench](media/ps2-bringup-bench.jpg)
-
-*The bring-up rig: converter, controller board and jumper harness on the bench, driven from
-a laptop. Buttons and stick positions were checked against live serial output before the
-receiver was trusted anywhere near the assembled robot.*
+<table>
+<tr>
+<td width="42%"><img src="media/ps2-controller-test.gif" alt="PS2 controller tested against live serial output"></td>
+<td width="58%"><img src="media/ps2-bringup-bench.jpg" alt="PS2 bring-up bench rig"></td>
+</tr>
+<tr>
+<td colspan="2"><em>Left: the PS2 receiver being verified. Every button press and stick
+movement is echoed by the serial monitor on the laptop, which is the firmware's
+<code>ps2_debug_report()</code> running. That is what "the receiver works" actually looks
+like: not a robot twitching, but a named input arriving as a value you can read. Right: the
+rig it was done on, converter and controller board and jumper harness on the bench, well
+away from twelve servos.</em></td>
+</tr>
+</table>
 
 ---
 
