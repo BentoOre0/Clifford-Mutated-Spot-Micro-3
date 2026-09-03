@@ -1,4 +1,4 @@
-# Modded Nova SM3 — "Clifford"
+# Modded Nova SM3 ("Clifford")
 
 A twelve-servo quadruped robot, built from [Chris Locke's Nova SM3](https://novaspotmicro.com)
 design and then substantially re-engineered because I could not buy the parts it
@@ -7,23 +7,25 @@ specifies.
 ![Clifford mid-integration](hardware/media/assembled-electronics-integration.jpg)
 
 *Clifford on the bench during electronics integration. Grey and red parts are my
-prints; the leg segments visible top and bottom are my redesigned geometry. Note the
-buck converter (green board, toroidal inductor), the servo driver board, the labelled
-wiring, and the calipers — the redesign was measurement-driven.*
+prints; the leg segments top and bottom are my redesigned geometry. Note the buck
+converter (green board, toroidal inductor), the controller PCB, the labelled wiring,
+and the calipers. The redesign was measurement-driven.*
 
 ---
 
 ## My role, in one paragraph
 
-**This is not my design.** The Nova SM3 — its architecture, its gaits, its servo motion
-engine, its master/slave split — is Chris Locke's work, and the firmware in this repo
+**This is not my design.** The Nova SM3, its architecture, its gaits, its servo motion
+engine and its master/slave split, is Chris Locke's work, and the firmware in this repo
 is his code. What is mine is everything that had to change when the specified hardware
 turned out to be unavailable where I live: **I redesigned the hip, femur and tibia leg
-parts around servos with different mounting geometry, printed and assembled the whole
-robot, wired and debugged the electronics and power distribution, brought each
-subsystem up individually with test sketches I wrote, and reorganised 6,390 lines of
-inherited firmware into something maintainable.** The robot stands, the electronics
-work, and the controller talks to the servos. It does not yet walk.
+parts around servos with different mounting geometry, merged the two-piece femur into a
+single printed part to fix its mating tolerances, printed and assembled the whole robot,
+re-architected the power distribution and corrected a wiring fault in the reference
+design, brought each subsystem up individually with test sketches I wrote, and
+reorganised 6,390 lines of inherited firmware into something maintainable.** The robot
+stands, the electronics work, and the controller talks to the servos. It does not yet
+walk.
 
 ---
 
@@ -49,19 +51,22 @@ everything around it.** That rule is visible in every comparison below.
 
 | Area | Chris Locke's | Mine |
 |---|---|---|
-| Robot architecture, gaits, `AsyncServo` motion engine, master/slave I²C protocol | ✅ all of it | — |
-| Original STL geometry | ✅ | Used as the base body, then modified |
-| **Hip (coxa), femur, tibia geometry** | Original geometry | ✅ **Redesigned around replacement servos** |
-| Printing and assembly of the whole robot | — | ✅ |
-| Wiring, power distribution, PCB assembly and bring-up | — | ✅ |
-| Per-subsystem bench test sketches (`Code/Tests/`) | — | ✅ |
-| Firmware v4.2 → v5.1 | ✅ | — |
-| **Firmware v6.0** (restructure, documentation, 2 bug fixes) | Behaviour is his | ✅ **Reorganisation is mine** |
-| Servo calibration values | ✅ | Still his — see [Status](#status) |
+| Robot architecture, gaits, `AsyncServo` motion engine, master/slave I2C protocol | all of it | |
+| Original STL geometry | yes | used as the base body, then modified |
+| **Hip (coxa), femur, tibia geometry** | original geometry | **redesigned around replacement servos** |
+| **Femur as a two-piece frame + cover** | two printed parts | **merged into one printed part** |
+| Printing and assembly of the whole robot | | **mine** |
+| **Power distribution architecture** | cascaded converters | **reworked to parallel** |
+| **Wiring diagram** | v5.2b pictogram | **revised for the parts I could source** |
+| PCB assembly, wiring and bring-up | | **mine** |
+| Per-subsystem bench test sketches (`Code/Tests/`) | | **mine** |
+| Firmware v4.2 to v5.1 | his | |
+| **Firmware v6.0** (restructure, documentation, 2 bug fixes) | behaviour is his | **reorganisation is mine** |
+| Servo calibration values | still his | see [Status](#status) |
 
 ---
 
-## Mechanical redesign — the evidence
+## Mechanical redesign
 
 Every figure below is rendered directly from the actual STL files in
 [`hardware/cad/`](hardware/cad/), original and modified, at matched camera angles.
@@ -69,36 +74,38 @@ Dimensions and volumes are measured from the mesh geometry, not estimated.
 
 ### Hip / coxa bracket
 
-![Original vs modified coxa bracket](hardware/cad/comparisons/coax-comparison.png)
+![Original vs modified coxa bracket](hardware/cad/comparisons/coxa-comparison.png)
 
-The servo-horn boss, its arc rib and the retaining tabs carry straight over — and the
+The servo-horn boss, its arc rib and the retaining tabs carry straight over, and the
 envelope along the joint axis matches to within **0.14 mm**. Everything that holds the
 servo body is new: the original's full-height back plate and overhanging two-hole ear
 become a stepped C-bracket with a cantilevered top shelf and a separate lower foot.
 
-![Servo pocket, viewed down the joint axis](hardware/cad/comparisons/coax-servo-pocket.png)
+![Servo pocket, viewed down the joint axis](hardware/cad/comparisons/coxa-servo-pocket.png)
 
 Looking straight down the joint axis makes the point cleanly: **same five-hole horn
-pattern, different pocket.** The original wraps the servo in a rounded-square shell
-sized to its case; mine is larger, squarer, corner-relieved, and offset from the horn
-centreline.
+pattern, different pocket.**
 
-### Femur
+### Femur: two parts merged into one
 
-![Original vs modified femur](hardware/cad/comparisons/femur-comparison.png)
+![Original two-piece femur vs merged single part](hardware/cad/comparisons/femur-comparison.png)
 
-Same story at the other end of the leg. The hip-end horn hub is preserved; the knee end
-goes from a slim slotted fork to a flat mounting pad with square posts and a boxed
-section that captures the replacement knee servo. The part ends up **24 mm wider and
-59% heavier in material terms** — that is the honest cost of housing a servo the
-original geometry was never drawn around.
+The original femur is **two separately printed parts that bolt together**, a structural
+frame and a cover. **I merged them into one part.** Splitting the femur across a joint
+meant the servo pocket and the knee mating features were split across two prints, so
+their alignment depended on how the two halves seated rather than on the model. Merging
+them puts every mating feature in one solid, referenced off one origin, and removes the
+assembly joint and its tolerance stack.
+
+The merge is close to material-neutral: **57.0 + 33.3 = 90.3 cm3 as two parts, against
+90.7 cm3 as one, a difference of 0.5%.** What was removed was a tolerance stack, not
+mass.
 
 ### Lower leg
 
 ![Original vs modified lower leg](hardware/cad/comparisons/tibia-comparison.png)
 
-→ **Full walkthrough, including how the parts were modelled and what is still open:
-[`docs/mechanical-redesign.md`](docs/mechanical-redesign.md)**
+→ **Full walkthrough: [`docs/mechanical-redesign.md`](docs/mechanical-redesign.md)**
 
 ---
 
@@ -107,35 +114,43 @@ original geometry was never drawn around.
 ![Electronics bay detail](hardware/media/electronics-bay-detail.jpg)
 
 *The controller PCB hand-populated with servo headers, Nano and IMU, beside the
-step-down converter — and my own masking-tape labels marking `+VCC / SDA / SCL / OE /
-GND` so the I²C and output-enable lines could be traced during bring-up.*
+step-down converter, and my own masking-tape labels marking `+VCC / SDA / SCL / OE /
+GND` so the I2C and output-enable lines could be traced during bring-up.*
 
-What I did: assembled and soldered the boards, worked out a power distribution scheme
-around the parts I could actually buy, and brought each subsystem up **one at a time**
-rather than flashing the full firmware and guessing. That last decision is the one that
-saved the most time, and it is why [`Code/Tests/`](Nova-SM3/Code/Tests/) exists — eight
-standalone sketches, one per peripheral, each with an explicit pass criterion:
+I could not source the specified converters or several peripherals, so the power tree
+and parts of the signal wiring had to be reworked. That work is captured in a **revised
+wiring diagram** with its changes listed on the drawing itself:
 
-| Sketch | Board | Proves |
-|---|---|---|
-| `Test_PWM_Servos` | Teensy 4.0 | PCA9685 @ 0x40, 12 servos, OE pin |
-| `Test_PS2` | Teensy 4.0 | Controller link |
-| `Test_MPU6050` | Teensy 4.0 | IMU on `Wire1` |
-| `Test_PIR` / `Test_Ultrasonic` | Teensy / Nano | Motion and range sensing |
-| `Test_OLED` / `Test_NeoPixel` | Nano | Display and RGB eyes |
-| `Test_MP3` | Teensy 4.0 | DFPlayer Mini |
+![Wiring revision notes](hardware/electronics/wiring-revision-notes.png)
 
-A pass on these proves *wiring and hardware*, not firmware — which is exactly what you
-want when you are trying to find out whether a fault is in your soldering or in
-somebody else's code.
+→ **Full diagram: [`hardware/electronics/Wiring_NovaSM3_v5-2b_MOD.png`](hardware/electronics/Wiring_NovaSM3_v5-2b_MOD.png)**
+(6000 x 4712; open it full size to read the pin labels)
 
-One concrete example of what bring-up caught, now written into the source as a warning:
-**the PS2 receiver is a 3.3 V part and the Teensy 4.0 is not 5 V tolerant.** Powering
-the receiver from 5 V and wiring DAT back to the Teensy damages the microcontroller
-through the data line.
+The two that are real engineering rather than substitution:
 
-→ **Details, including what is and isn't documented:
-[`docs/electronics.md`](docs/electronics.md)**
+**Power: cascaded converters reworked to parallel.** In the reference design the XL6009
+5.4 V converter took its input from the 6.8 V converter's output block, so the two ran
+in series and everything downstream of the first inherited its droop and its losses.
+Under twelve servos this is exactly the arrangement you do not want. I moved the XL6009
+input off that block and onto the switched battery pair at the 6.8 V buck input, so
+**both converters now run in parallel off the pack**, and the change freed a VIN and a
+GND terminal.
+
+**A wiring fault in the reference design.** The PIR ground drop dead-ended on the
+`VIN PIR, PS2, SW` **+5 V rail** rather than the ground rail. I traced it, corrected it,
+and redrew the four remaining +5 V / GND crossings as explicit over-under so the drawing
+cannot be misread as a connection.
+
+The **NRF24L01 was removed and a Yahboom 2.4 G PS2 receiver fitted** in its place on the
+PS2-COM header, with VCC on 3.3 V, and the shared D9/D10 lines mean the NRF footprint
+must stay unpopulated. The DFPlayer Mini was replaced by a DFPlayer PRO (DFR0768).
+
+Bring-up was done **one subsystem at a time** using
+[`Code/Tests/`](Nova-SM3/Code/Tests/), eight standalone sketches that deliberately
+include none of the main firmware, so a pass isolates a wiring fault from a firmware
+fault.
+
+→ **Details: [`docs/electronics.md`](docs/electronics.md)**
 
 ---
 
@@ -143,7 +158,7 @@ through the data line.
 
 The inherited firmware worked but was hard to change: the Teensy master was a single
 **6,390-line `.ino`**, with an 812-line `ps2_check()` nested eight levels deep, a
-425-line `setup()`, and 85 undocumented magic strings like `"MQNOFzn"` as the I²C
+425-line `setup()`, and 85 undocumented magic strings like `"MQNOFzn"` as the I2C
 protocol between the two boards.
 
 I produced **v6.0**: the same robot, reorganised.
@@ -151,58 +166,57 @@ I produced **v6.0**: the same robot, reorganised.
 | | v5.1 (inherited) | v6.0 (mine) |
 |---|---|---|
 | Teensy sketch | one 6,390-line file | 12 topical tabs, largest 886 lines |
-| Largest function | `ps2_check()` — 812 lines, 8 deep | `follow()` — 215 lines |
+| Largest function | `ps2_check()`, 812 lines, 8 deep | `follow()`, 215 lines |
 | `setup()` | 425 lines | 19 lines, one call per boot step |
 | Slave protocol | 85 undocumented strings | named constants in a shared header |
 | Nano flash used | 91% | 83% |
 
 Behaviour is deliberately unchanged, and that was verified rather than assumed: the
 slave-protocol renaming and the file split both produced **byte-identical compiler
-output**. Two genuine defects surfaced while reading and were fixed — a button-release
+output**. Two genuine defects surfaced while reading and were fixed: a button-release
 handler that tested `PSB_R2` where it meant `PSB_R1` (so releasing R1 never stopped the
 body roll), and three ultrasonic debug prints where only the first was behind its debug
 guard.
 
-**On AI assistance:** the v6.0 restructure was done with Claude Code, and I have said so
+**On the controller.** Upstream's newer versions, and the v5.2b board this build is
+based on, are designed around an nRF24L01 plus a custom-built remote; upstream's older
+versions used a PS2 controller. Rather than fabricate a bespoke remote, I **removed the
+NRF24L01 and wired a PS2 receiver in its place** (revision 3 on the wiring diagram) and
+built the firmware on the older PS2 code path. That is why v6.0 is, as my own source
+header puts it, a "Frankenstein": v5.1's structure with the PS2 control path retained.
+
+**On AI assistance.** The v6.0 restructure was done with Claude Code, and I have said so
 in the firmware README, in the source headers, and here. The refactor was mine to
-direct, review and verify; I am not going to pretend otherwise in either direction.
+direct, review and verify.
 
-**On the controller:** I did *not* replace an nRF system with PS2. It is the other way
-round — Chris Locke's **newer** versions moved to an nRF module with a custom-built
-remote, and his older versions used a PS2 controller. I chose to build on the older PS2
-path rather than fabricate a bespoke remote, so v6.0 is, as my own source comment puts
-it, a "Frankenstein" — v5.1's structure with the PS2 control path retained.
-
-→ **Full changelog and architecture: [`Nova-SM3/Code/README.md`](Nova-SM3/Code/README.md)**
+→ **Full changelog: [`Nova-SM3/Code/README.md`](Nova-SM3/Code/README.md)**
 
 ---
 
 ## Status
 
-Honest state of the build:
-
 | | |
 |---|---|
-| Mechanical design and printing | ✅ Complete |
-| Assembly | ✅ Complete |
-| Electronics integration | ✅ Complete |
-| Per-subsystem bench tests | ✅ Passing |
-| PS2 controller → servo path | ✅ Verified |
-| Firmware v6.0 restructure | ✅ Complete, compiles clean for both target boards |
-| **Servo recalibration for my servos** | ❌ **Not done** |
-| **Walking gaits on this robot** | ❌ **Not working yet** |
+| Mechanical design and printing | Complete |
+| Assembly | Complete |
+| Electronics integration | Complete |
+| Wiring diagram revised for sourced parts | Complete |
+| Per-subsystem bench tests | Passing |
+| PS2 controller to servo path | Verified |
+| Firmware v6.0 restructure | Complete, compiles clean for both target boards |
+| **Servo recalibration for my servos** | **Not done** |
+| **Walking gaits on this robot** | **Not working yet** |
 
 The last two are the same problem, and it is worth being clear about it because it is
-the most interesting open item in the project:
+the most interesting open item in the project.
 
 `NovaServos.h` still contains **Chris Locke's `servoHome[]` and `servoLimit[]` values,
-byte-for-byte**. Those numbers are physical measurements of *his* robot — raw PWM ticks
+byte-for-byte.** Those numbers are physical measurements of *his* robot: raw PWM ticks
 for his servos in his leg geometry. Mine has different servos in legs I redesigned, so
 those values do not describe this machine. The gaits are hand-tuned against them, which
-is why locomotion is the piece that does not work yet. The fix is not a code change: it
+is why locomotion is the piece that does not work yet. The fix is not a code change. It
 is bench work with [`Nova-SM3-calibrate/`](Nova-SM3/Code/Nova-SM3-calibrate/) to
-re-measure home and limit positions for all twelve joints, and then re-tuning from
-there.
+re-measure home and limit positions for all twelve joints, then re-tuning from there.
 
 ---
 
@@ -212,38 +226,39 @@ there.
 README.md                       this file
 docs/
   mechanical-redesign.md        how the leg parts were modified, and why
-  electronics.md                power, wiring, bring-up, and what is not documented
+  electronics.md                power, wiring, bring-up and debugging
 hardware/
   cad/
     original/                   Chris Locke's unmodified reference STLs
-    modified/                   my geometry — STL + native SolidWorks parts
+    modified/                   my geometry, STL plus native SolidWorks parts
     comparisons/                rendered before/after figures
-    README.md                   which file is whose, and measured dimensions
-  electronics/                  schematics and wiring
+    README.md                   which file is whose, with measured dimensions
+  electronics/                  revised wiring diagram
   media/                        build photography
 Nova-SM3/Code/                  the firmware (see its own README)
 ```
 
-**`hardware/cad/original/` is never overwritten.** Keeping Chris Locke's geometry
-intact next to mine is the only way either the attribution or the comparison means
-anything.
+**`hardware/cad/original/` is never overwritten.** Keeping Chris Locke's geometry intact
+next to mine is the only way either the attribution or the comparison means anything.
 
 ---
 
 ## Credit and licence
 
-**Original project — Chris Locke** (`cguweb@gmail.com`) ·
+**Original project, Chris Locke** (`cguweb@gmail.com`) ·
 [novaspotmicro.com](https://novaspotmicro.com) ·
 [GitHub](https://github.com/cguweb-com/Arduino-Projects/tree/main/Nova-SM3) ·
 [Thingiverse](https://www.thingiverse.com/thing:4767006) ·
 [Instructables](https://www.instructables.com/Nova-Spot-Micro-a-Spot-Mini-Clone/).
-MIT licensed — see [LICENSE](LICENSE), Copyright (c) 2021 Christopher M. Locke.
+MIT licensed, see [LICENSE](LICENSE), Copyright (c) 2021 Christopher M. Locke.
+The wiring diagram here is a revision of his v5.2b pictogram; the base artwork is his
+and the revisions are mine.
 
-**Third-party parts** — Thingiverse user **Ozzymat**'s
+**Third-party parts.** Thingiverse user **Ozzymat**'s
 [Nova SM3 electronics-mounting remix](https://www.thingiverse.com/thing:7131451)
 (CC BY-SA) is in my working files as a reference for mounting the PCA9685 and the
-XL6009 buck converter. Those parts are **not** included in this repository and are
-**not** my work; the geometry documented here as mine is the hip, femur and tibia only.
+XL6009 buck converter. Those parts are **not** included here and are **not** my work;
+the geometry documented as mine is the hip, femur and tibia only.
 
-**Modifications, mechanical redesign, electronics and v6.0 firmware — Jeremy Aidan Yu**,
+**Modifications, mechanical redesign, electronics and v6.0 firmware, Jeremy Aidan Yu**,
 with the v6.0 restructure done with assistance from Claude Code.

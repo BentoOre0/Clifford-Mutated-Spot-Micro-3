@@ -1,4 +1,4 @@
-# Nova SM3 — Firmware
+# Nova SM3: Firmware
 
 Nova SM3 is the firmware for a **Spot-Micro-class quadruped robot**: a twelve-servo
 four-legged walker built around a Teensy 4.0 and an Arduino Nano. It walks, trots,
@@ -45,7 +45,7 @@ Nova runs on two microcontrollers connected over i²c.
 
 ```
         ┌──────────────────────────┐                ┌────────────────────────┐
-        │  Teensy 4.0  —  MASTER   │      i²c       │  Arduino Nano — SLAVE  │
+        │  Teensy 4.0  -  MASTER   │      i²c       │  Arduino Nano - SLAVE  │
         │                          │◄──────────────►│                        │
         │  12 servos (PCA9685)     │  one command   │  SSD1331 OLED          │
         │  MPU6050 IMU             │  byte at a     │  4 NeoPixel "eyes"     │
@@ -58,7 +58,7 @@ Nova runs on two microcontrollers connected over i²c.
              does all the thinking                    owns only its own I/O
 ```
 
-The Teensy makes every decision. The Nano makes none — it receives single-byte
+The Teensy makes every decision. The Nano makes none, it receives single-byte
 commands and carries them out. **Every one of those bytes is named and documented in
 `NovaSlaveProtocol.h`,** which is the single most useful file to read if you want to
 understand how the two halves fit together.
@@ -93,7 +93,7 @@ before it. They are snapshots. A fix made in v6.0 does not propagate anywhere.
 
 ---
 
-## Master sketch — `Nova-SM3_teensy-v6.0/`
+## Master sketch: `Nova-SM3_teensy-v6.0/`
 
 Open `Nova-SM3_teensy-v6.0.ino` in the Arduino IDE and the rest appear as tabs.
 They all compile together as one program, so a global declared in the main tab is
@@ -104,7 +104,7 @@ visible in every other one.
 | `Nova-SM3_teensy-v6.0.ino` | **Start here.** Globals, `setup()`, `loop()`, the boot sequence, shutdown |
 | `NovaConfig.h` | **The file you edit.** Debug flags, which hardware is fitted, the pin map |
 | `NovaServos.h` | Per-robot servo calibration and the motion state arrays |
-| `NovaSlaveProtocol.h` | Names for every byte sent to the Nano — shared with the slave sketch |
+| `NovaSlaveProtocol.h` | Names for every byte sent to the Nano: shared with the slave sketch |
 | `AsyncServo.h` | The non-blocking servo motion engine |
 | `MPU6050_conf.h` | Register-level IMU driver (third-party, left as-is) |
 | `pitches.h` | Musical note frequencies (stock Arduino file) |
@@ -154,13 +154,13 @@ sketch is allowed to call `delay()` while the robot is running.
 
 The remote has four modes, cycled with SELECT and tracked in `ps2_select`. Every
 button means something different in each. If a control seems dead, check which set is
-active first — this catches most "the remote is broken" reports.
+active first, this catches most "the remote is broken" reports.
 
 | Set | Purpose |
 |---|---|
-| 1 | Walking and body attitude — roll, pitch, axis wiggles |
-| 2 | Gait control and fixed poses — sit, kneel, crouch, lay |
-| 3 | Kinematics — the sticks steer body position and yaw directly |
+| 1 | Walking and body attitude: roll, pitch, axis wiggles |
+| 2 | Gait control and fixed poses: sit, kneel, crouch, lay |
+| 3 | Kinematics: the sticks steer body position and yaw directly |
 | 4 | Per-joint calibration jogging, for bench work |
 
 Type `ps2` on the serial monitor to get a live report of button presses, stick values
@@ -168,12 +168,12 @@ and the current set.
 
 ---
 
-## Slave sketch — `Nova-SM3_nano-v6.0/`
+## Slave sketch: `Nova-SM3_nano-v6.0/`
 
 | File | Responsibility |
 |---|---|
 | `Nova-SM3_nano-v6.0.ino` | **Start here.** Globals, `setup()`, `loop()`, the two i²c handlers |
-| `NovaSlaveProtocol.h` | The command bytes — **must stay identical to the master's copy** |
+| `NovaSlaveProtocol.h` | The command bytes: **must stay identical to the master's copy** |
 | `NovaBitmap.h` | The boot logo bitmap |
 | `Display.ino` | Everything drawn on the OLED |
 | `Leds.ino` | The NeoPixel eye animations |
@@ -183,7 +183,7 @@ Two i²c interrupt handlers do all the work: `receiveEvent()` stores the incomin
 byte, `requestCallback()` acts on it and returns a response. `loop()` only advances
 the LED animation and the display, and watches the front-panel button.
 
-The Nano keeps one piece of state that changes what a byte means — `serial_oled`.
+The Nano keeps one piece of state that changes what a byte means, `serial_oled`.
 When it is 0 an incoming byte is a system command (LEDs, sensors); when it is 1 it is
 a display command. The byte `'X'` toggles it. On the master you never toggle it by
 hand: use `rgb_request()` and `oled_request()`, which handle it for you.
@@ -193,7 +193,7 @@ hand: use `rgb_request()` and `oled_request()`, which handle it for you.
 ## Building and flashing
 
 There is no build system, test suite, or linter. These are plain Arduino sketches
-and validation is physical — flash them and exercise the robot.
+and validation is physical, flash them and exercise the robot.
 
 ### Arduino IDE
 
@@ -219,8 +219,8 @@ arduino-cli compile --fqbn arduino:avr:nano \
 
 Both compile clean as of this release. Current usage:
 
-* **Teensy 4.0** — 121 KB flash of 1.9 MB available, 29 KB RAM1. Plenty of room.
-* **Arduino Nano** — 83% of flash, 48% of RAM. **Very little room.** Check the
+* **Teensy 4.0**: 121 KB flash of 1.9 MB available, 29 KB RAM1. Plenty of room.
+* **Arduino Nano**: 83% of flash, 48% of RAM. **Very little room.** Check the
   compiler's final report before adding anything to the slave.
 
 ---
@@ -233,7 +233,7 @@ board, and Nova will appear completely dead. This is the single most common way 
 lose an afternoon on this project.
 
 **The Teensy 4.0 is not 5V tolerant.** Every input must stay at or below 3.3V. In
-particular the PS2 receiver must be powered from 3.3V — powering it from 5V will
+particular the PS2 receiver must be powered from 3.3V, powering it from 5V will
 damage the Teensy through its DATA line.
 
 **`OE_PIN` is active LOW.** Driving it LOW *enables* the servos. It is held HIGH
@@ -249,7 +249,7 @@ is why both carry a "do not change once calibrated" warning.
 
 **`servoLimit[]` pairs are ordered by leg direction, not numerically.** For the left
 legs the first value is the *larger* number, because those servos are mirrored. Any
-code comparing against them has to check which way round the pair is — see
+code comparing against them has to check which way round the pair is, see
 `limit_target()`.
 
 **Speed is a delay.** `servoSpeed[]` is the number of milliseconds between one PWM
@@ -268,7 +268,7 @@ identical or the boards will disagree about what a byte means.
 
 ## Author / Modification Notes
 
-**Original author: Chris Locke** (<cguweb@gmail.com>) — Nova SM3 is his design and
+**Original author: Chris Locke** (<cguweb@gmail.com>), Nova SM3 is his design and
 his code, including the mechanical design, the gait development, the servo motion
 engine and the master/slave architecture. Project home:
 [novaspotmicro.com](https://novaspotmicro.com) ·
@@ -281,7 +281,7 @@ engine and the master/slave architecture. Project home:
 Version 6.0 makes no claim on the design or the behaviour of the robot. The work in
 this release is confined to structure, naming and documentation. The original code
 was written as a personal project under active hardware development, with the
-author's own notes and open questions left in place deliberately — those notes are
+author's own notes and open questions left in place deliberately, those notes are
 preserved here, and the DEV NOTE comments marking unfinished work are still in the
 source where he left them.
 
@@ -301,7 +301,7 @@ is about as strong a guarantee as is available without hardware.
 large cannot be navigated; you scroll for it. The tabs follow the section banners
 the original author had already put in the file, so the grouping is his, not an
 invention. Arduino compiles all tabs as one program, so this changed nothing about
-how the code works — verified by identical compiler output before and after.
+how the code works, and was verified by identical compiler output before and after.
 
 **Split the 1,265-line slave sketch into four source files and two headers**, and
 moved the 64-line boot logo
@@ -313,14 +313,14 @@ with a full pin-map table, because they are the only things most people ever edi
 
 **Broke up the three functions that were 29% of the file.**
 
-* `ps2_check()` — 812 lines, eight levels of nesting, 57 tests of `ps2_select` — is
+* `ps2_check()` (812 lines, eight levels of nesting, 57 tests of `ps2_select`) is
   now a 25-line dispatcher plus one handler per button group. The structure was
   always *[which button] × [which of four sets]*; it was just flattened into one
   chain.
-* `serial_command()` — 633 lines of chained string comparison — is now an 18-line
+* `serial_command()` (633 lines of chained string comparison) is now an 18-line
   dispatcher over ten topic groups, each returning whether it recognised the
   command. First-match-wins ordering is preserved exactly.
-* `setup()` — 425 lines — is now 19 lines, one call per boot step, so the order the
+* `setup()` (425 lines) is now 19 lines, one call per boot step, so the order the
   hardware comes up in is readable at a glance.
 
 **Split the slave's `requestCallback()`** (264 lines) into an OLED-command handler
@@ -338,7 +338,7 @@ oled_request((char*)"9n");
 
 and could only be decoded by reverse-engineering a 264-line switch on the other
 board. There are now named constants in `NovaSlaveProtocol.h`, shared by both
-sketches, and because they are string literals they concatenate at compile time — so
+sketches, and because they are string literals they concatenate at compile time, so
 the call sites cost exactly the same flash they did before:
 
 ```cpp
@@ -360,7 +360,7 @@ reader had to trust 23 hand-written comments. It now compares against the protoc
 constants directly.
 
 **Renamed `AsyncServo::pwmBoard` to `pwmPin`.** It holds a PCA9685 *channel* number,
-not a board id — and it carried a copy-pasted comment claiming it was the pulse
+not a board id, and it carried a copy-pasted comment claiming it was the pulse
 increment. Three things with three different meanings under one name.
 
 **Corrected several comments that described something other than what the code did**,
@@ -376,14 +376,14 @@ sites, which took about 260 lines of near-identical code out of the movement
 routines and makes the actual differences between gaits visible.
 
 **Extracted the ramp interpolation in `AsyncServo`.** A 35-line block was duplicated
-character-for-character between the move path and the sweep path — verified identical
+character-for-character between the move path and the sweep path, and was verified identical
 before extracting, so a future fix to one can no longer miss the other.
 
 **Collapsed the PS2 joint-jogging code.** Twelve copies of an 11-line "nudge this
 joint by one tick" block became twelve one-line calls to `ps2_jog_joint()`.
 
 **Table-driven the slave's command decoding.** The RGB commands arrive as four
-contiguous blocks of bytes — pattern, repeat count, step interval, colour — so each
+contiguous blocks of bytes (pattern, repeat count, step interval, colour), so each
 block is now a range test and a small `PROGMEM` lookup table instead of a `case` per
 byte. Eight near-identical colour cases became one.
 
@@ -391,7 +391,7 @@ byte. Eight near-identical colour cases became one.
 if/else branches were, on inspection, a 10×5 table of bar heights and colours where
 every bar sits on the same baseline. It is now that table plus a five-iteration loop.
 The ten voltage comparisons it used to make all resolved to "which level is it",
-since the voltage being compared came from the same array — so the level indexes the
+since the voltage being compared came from the same array, so the level indexes the
 table directly.
 
 **Table-driven the radar grid.** 32 hand-written `drawLine` calls became two short
@@ -400,7 +400,7 @@ loops over the gap positions.
 **Table-driven the boot report.** 84 lines of "print a name, toggle the LED, wait"
 became a table of subsystems and two loops.
 
-Together these are the reason the Nano's flash use fell from **91% to 83%** — the
+Together these are the reason the Nano's flash use fell from **91% to 83%**. The
 duplication was real, and it was costing space on the board that had none to spare.
 
 ### Documentation
@@ -431,8 +431,8 @@ table grouped to match the command handlers, and lists everything the sketch acc
 * Removed a `test_loops` soak-test block wired into the middle of `step_march()`.
   Its trigger variable was initialised to 0 and never set anywhere, so it could not
   run; it also carried its own broken indentation.
-* Removed eleven global variables that were declared and never read. Two of them —
-  `pattern_int` and `pattern_cnt` — shadowed the names of variables on the *slave*
+* Removed eleven global variables that were declared and never read. Two of them,
+  `pattern_int` and `pattern_cnt`, shadowed the names of variables on the *slave*
   that are load-bearing, which is actively misleading.
 * Removed `save_ep_data()` on the slave, which was declared, defined and never
   called. The EEPROM write it duplicated still happens inline in the reboot
@@ -458,14 +458,14 @@ table grouped to match the command handlers, and lists everything the sketch acc
 
 Two, both fixes for real defects found while reading:
 
-1. **`Ps2Remote.ino` — releasing R1 never stopped the body roll.** The release
+1. **`Ps2Remote.ino`: releasing R1 never stopped the body roll.** The release
    handler for the R1 button tested `PSB_R2` instead of `PSB_R1`. Letting go of R1
    left `move_roll_body` set, so the body kept rolling until something else called
    `set_stop()`; letting go of R2 cleared it instead, stealing R2's own release.
    Every other trigger clears the flag its own button set. Marked
    `BUGFIX (v6.0)` in the source.
 
-2. **`Nova-SM3_nano-v6.0.ino` — `get_distance()` printed with debugging off.** Of
+2. **`Nova-SM3_nano-v6.0.ino`: `get_distance()` printed with debugging off.** Of
    three consecutive `Serial.print` calls, only the first was guarded by `debug1`;
    the other two ran on every ultrasonic reading. All three are now inside the
    guard. Marked `BUGFIX (v6.0)` in the source.
@@ -490,7 +490,7 @@ emptiness when it does not.
   actually happens.
 * **`pitches.h`.** The stock Arduino note table.
 * **The `move_*` flag architecture.** Fifty-two booleans, of which exactly one may
-  be true, is really an enum — but converting it touches every movement routine and
+  be true, is really an enum, but converting it touches every movement routine and
   every stop path at once. It is documented instead, including the warning that a new
   flag must also be cleared in `set_stop_active()`. This is the most worthwhile
   remaining change, and the right time for it is when the flags start fighting each
@@ -511,7 +511,7 @@ nothing below has been run on a robot:
 * **The R1 release fix** changes what the remote does. Confirm in button set 1 that
   holding R1 rolls the body and releasing it stops.
 * **The battery gauge rewrite** replaced a voltage cascade with a table lookup. The
-  substitution is provable on paper, but stepping the level through 0–9 with the
+  substitution is provable on paper, but stepping the level through 0-9 with the
   `batt` serial command is a five-minute check worth doing.
 * **The `set_sweep()` extraction** touched 67 call sites across every movement
   routine. Each was converted mechanically, but exercising the sweeps (`st`, `sf`,

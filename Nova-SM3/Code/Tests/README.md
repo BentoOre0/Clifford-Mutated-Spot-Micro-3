@@ -1,4 +1,4 @@
-# Nova SM3 — peripheral bench tests
+# Nova SM3: peripheral bench tests
 
 Standalone, single-purpose sketches for isolating one piece of hardware at a
 time. Each one is independent: flash it, confirm that subsystem works, move on.
@@ -22,7 +22,7 @@ being a valid reference.
 | `Test_OLED` | Arduino Nano | SSD1331 96×64 SPI (13/11/10/9/8) |
 | `Test_NeoPixel` | Arduino Nano | 4× WS2812 eyes (pin 2) + brightness pot A3 |
 
-Set the correct board in the IDE before uploading — the Teensy sketches will
+Set the correct board in the IDE before uploading, the Teensy sketches will
 not compile for a Nano and vice versa.
 
 ## Libraries
@@ -41,12 +41,12 @@ is for the DFPlayer Mini **Pro**, a different module with a different API.
 
 Work outward from the things everything else depends on:
 
-1. **`Test_MPU6050`** — also scans `Wire1`, so it doubles as an I²C bus check.
-2. **`Test_PWM_Servos`** — scans the default `Wire` bus (should find `0x40`,
+1. **`Test_MPU6050`**: also scans `Wire1`, so it doubles as an I²C bus check.
+2. **`Test_PWM_Servos`**: scans the default `Wire` bus (should find `0x40`,
    and `0x01` if the Nano is powered). Confirms the master↔slave link exists
    before you trust either side.
-3. **`Test_PS2`**, **`Test_PIR`**, **`Test_MP3`** — remaining Teensy peripherals.
-4. **`Test_OLED`**, **`Test_NeoPixel`**, **`Test_Ultrasonic`** — Nano side.
+3. **`Test_PS2`**, **`Test_PIR`**, **`Test_MP3`**: remaining Teensy peripherals.
+4. **`Test_OLED`**, **`Test_NeoPixel`**, **`Test_Ultrasonic`**: Nano side.
 
 ## ⚠️ Before running `Test_PWM_Servos`
 
@@ -56,13 +56,12 @@ Work outward from the things everything else depends on:
 - Note those limit pairs are `{min,max}` in *leg* direction, not numeric order
   (e.g. `LFF` is `{537,207}`), so the sketch clamps against the numeric lo/hi.
 - The real thing this test catches: `servoSetup[]` maps servos to PCA9685
-  channels 0,1,2 / 4,5,6 / 8,9,10 / 12,13,14 — channels 3, 7, 11, 15 are
+  channels 0,1,2 / 4,5,6 / 8,9,10 / 12,13,14, channels 3, 7, 11, 15 are
   deliberately skipped. A mis-wire produces **no error**, just the wrong joint
   moving. Jog each servo and confirm the expected joint responds.
 
 ## Serial
 
 All sketches use **115200 baud**. Teensy sketches wait up to 5s for a serial
-connection then continue regardless, so they won't hang if run untethered —
-unlike the main sketch, which will not boot without serial if any `debug` flag
+connection then continue regardless, so they won't hang if run untethered, unlike the main sketch, which will not boot without serial if any `debug` flag
 is set.
