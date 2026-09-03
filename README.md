@@ -104,9 +104,11 @@ original geometry was never drawn around.
 
 ## Electronics
 
-The build photo at the top is the best single piece of evidence: populated driver board,
-buck converter, XT60 power connector, twelve servos, speaker, and hand-labelled wiring
-looms.
+![Electronics bay detail](hardware/media/electronics-bay-detail.jpg)
+
+*The controller PCB hand-populated with servo headers, Nano and IMU, beside the
+step-down converter — and my own masking-tape labels marking `+VCC / SDA / SCL / OE /
+GND` so the I²C and output-enable lines could be traced during bring-up.*
 
 What I did: assembled and soldered the boards, worked out a power distribution scheme
 around the parts I could actually buy, and brought each subsystem up **one at a time**

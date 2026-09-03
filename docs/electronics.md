@@ -89,11 +89,23 @@ it from the laptop. Set them all to 0 before running on battery.
 
 ## Power distribution
 
-![Clifford during electronics integration](../hardware/media/assembled-electronics-integration.jpg)
+![Electronics bay detail](../hardware/media/electronics-bay-detail.jpg)
 
-Visible in the build: the servo driver board, a buck converter (the green board with the
-toroidal inductor), an XT60 connector for the LiPo, the twelve servo looms, the speaker,
-and hand-written labels on the wiring.
+*The electronics bay, close up. Left of centre: the step-down converter — toroidal
+inductor, electrolytic bank, two finned heatsinks and screw terminals marked `IN` and
+`OUT/BATT`. Right of centre: the Nova SM3 controller PCB, hand-populated with JST servo
+headers, an Arduino Nano, an MPU6050 breakout, a DIP switch and screw terminals. The
+masking-tape labels reading `+VCC / SDA / SCL / OE / GND` are mine — written during
+bring-up so the I²C and output-enable lines could be traced without the diagram.*
+
+Visible in the build: the controller PCB with its servo headers populated, the buck
+converter, an XT60 connector for the LiPo, the twelve servo looms, the speaker, and
+hand-written labels on the wiring.
+
+The PCB is the project's own board, not an off-the-shelf module — I populated and
+soldered it, then fitted it and the converter into the printed chassis. The full
+assembled context is in
+[`assembled-electronics-integration.jpg`](../hardware/media/assembled-electronics-integration.jpg).
 
 I designed the power distribution around the converters I could actually buy rather than
 the ones specified, which meant working out the rail structure myself rather than
