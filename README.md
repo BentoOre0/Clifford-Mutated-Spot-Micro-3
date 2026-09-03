@@ -24,11 +24,16 @@ measurements.*
 
 ## The problem that started everything
 
+I built this in the Philippines, where a significant share of the original bill of
+materials was not practically sourceable. The servos were the ones that mattered.
+
 The Nova SM3 is drawn around the **DS3218** servo, which bolts down through **four sets of
 mounting holes.**
 
 The only servos I could actually buy were the **RDS3218**, which does not have those holes.
 It hangs in a **U-shaped metal bracket** instead.
+
+![DS3218 against RDS3218](mechanical/media/servo-mounting-comparison.jpg)
 
 That is not a tolerance problem you solve by opening a hole out by half a millimetre. The
 mounting scheme every leg part was built around simply does not exist on the replacement
@@ -148,6 +153,10 @@ MIT licensed, see [LICENSE](LICENSE), Copyright (c) 2021 Christopher M. Locke.
 The robot, its gaits, its servo motion engine and its master/slave architecture are his.
 The wiring diagram here is a revision of his v5.2b pictogram: the base artwork is his and
 the revisions are mine.
+
+**Third-party images.** The DS3218 photograph in the
+[mechanical write-up](mechanical/README.md) is a manufacturer product image from a retail
+listing, reproduced for comparison only. It is not my photograph.
 
 **Third-party parts.** Thingiverse user **Ozzymat**'s
 [Nova SM3 electronics-mounting remix](https://www.thingiverse.com/thing:7131451) (CC BY-SA)

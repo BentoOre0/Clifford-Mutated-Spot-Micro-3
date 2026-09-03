@@ -15,6 +15,14 @@ The only servo I could buy was the **RDS3218**. Electrically and dimensionally i
 close relative. Mechanically it is not: it has no four-hole pattern. It **hangs in a
 U-shaped metal bracket**, and the bracket is how it attaches to anything.
 
+![DS3218 against RDS3218](media/servo-mounting-comparison.jpg)
+
+*The whole project in one image. On the DS3218 the mounting tabs are moulded into the case,
+so a printed part bolts directly to the servo. The RDS3218 has none, and is instead
+suspended in a separate metal bracket, which means the printed part has to capture the
+bracket rather than the servo. The DS3218 photograph is a manufacturer product image
+reproduced for comparison and is not my own.*
+
 So this was never a case of opening out a hole or shaving a wall. **The entire mounting
 scheme the parts were designed around does not exist on the part I had.** Every feature
 that held a servo was holding onto something that was no longer there, which meant each
@@ -231,8 +239,9 @@ backpack on the outside of the body while presenting a clean face on the inside.
 *The black module protruding from the top rear of the body.*
 
 **Fitting it was hand work, not CAD.** The mounting holes were **melted through with a
-soldering iron** rather than printed or drilled, then the assembly was secured with inserts
-and nuts. That is not the elegant solution and I am not going to present it as one, but
+soldering iron** rather than printed or drilled. Brass **heat-set threaded inserts** were
+melted into those holes with the same iron, and the assembly was secured with those and
+nuts. That is not the elegant solution and I am not going to present it as one, but
 merging two parts from different revisions of a project is exactly where a printed part
 stops agreeing with a model, and a soldering iron is a reasonable answer to a hole that
 needs to be in a slightly different place than the file says.
