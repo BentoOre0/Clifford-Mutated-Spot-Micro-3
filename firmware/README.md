@@ -5,9 +5,12 @@ four-legged walker built around a Teensy 4.0 and an Arduino Nano. It walks, trot
 marches, sits, kneels, follows a person around a room using PIR sensors, and reports
 what it is doing on a small colour display and a pair of RGB "eyes".
 
-This directory holds the Arduino sketches. The STL files, wiring diagrams and parts
-list live one level up in `../`. The project's home is
+This directory holds the Arduino sketches. The leg redesign is in
+[`../mechanical/`](../mechanical/README.md) and the wiring, power and bring-up work is in
+[`../electronics/`](../electronics/README.md). The upstream project's home is
 [novaspotmicro.com](https://novaspotmicro.com).
+
+<- [back to the main README](../README.md)
 
 ---
 
@@ -70,7 +73,7 @@ The two sketches must be flashed as a matched pair.
 ## Directory layout
 
 ```
-Code/
+firmware/
 ├── README.md                     this file
 ├── CLAUDE.md                     notes for AI coding assistants
 │
