@@ -70,6 +70,63 @@ The two sketches must be flashed as a matched pair.
 
 ---
 
+## The interfaces
+
+There is no single bus in this robot. Nearly every peripheral speaks something different,
+and a good deal of the bring-up work was getting each one talking on its own terms.
+
+| Interface | Where | What is on it |
+|---|---|---|
+| **I2C**, `Wire` | Teensy | PCA9685 servo driver at `0x40` |
+| **I2C**, `Wire1` | Teensy, SDA2 17 / SCL2 16 | **shared**: the MPU6050 IMU at `0x68` *and* the Nano at address 1 |
+| **PWM** | PCA9685 outward | 12 servos at `SERVO_FREQ` 60 Hz |
+| **Bit-banged serial** | Teensy, pins 7/8/9/10 | the PS2 receiver |
+| **UART** | Teensy, `SoftwareSerial` | DFPlayer MP3 module |
+| **USB serial** | Teensy | the typed command interface |
+| **SPI** | Nano | SSD1331 OLED |
+| **Timed single wire** | Nano, pin 2 | 4 NeoPixels |
+| **Pulse timing** | Nano, `NewPing` | 2 ultrasonic sensors |
+
+Two of these are worth knowing about before you debug anything.
+
+**The IMU and the slave share `Wire1`.** The Teensy's second I2C bus carries both the
+MPU6050 and the entire master/slave conversation. They coexist on different addresses, but
+they are not independent: a device holding that bus affects the other one.
+
+**The PS2 protocol is bit-banged, not hardware SPI.** It resembles SPI, and it uses four
+wires that look like SPI, but `PS2X_lib` drives clock, command and select **in software**,
+toggling the pins directly:
+
+```cpp
+digitalWrite(_clk, HIGH);
+// ...
+digitalWrite(_clk, LOW);
+```
+
+That has consequences. The timing is produced by the CPU, so anything that blocks or
+delays the loop can corrupt a read, which is part of why nothing in this firmware is
+allowed to call `delay()` while the robot is running. It is also why `OE_PIN` is held high
+through boot until the PS2 link is up: the PWM driver interferes with the receiver, and a
+bit-banged protocol has no hardware peripheral to absorb that interference.
+
+### Why PS2 and not the nRF24L01
+
+The v5.2b board this build is based on, and upstream's newer firmware, are designed around
+an **nRF24L01 plus a custom-built handheld remote**. Building that remote is a project in
+itself: its own board, its own enclosure, its own firmware.
+
+I did not want to build my own controller, so I did not. **The nRF24L01 was left
+unpopulated and a PS2 receiver wired onto the PS2-COM header in its place**, which let me
+use an off-the-shelf gamepad. Upstream's older versions drove the robot from a PS2
+controller, so that code path already existed and was known to work.
+
+The cost is that v6.0 is, as my own source header puts it, a "Frankenstein": v5.1's
+structure with the older PS2 control path kept alive. The nRF footprint has to stay empty
+because D9 and D10 are shared with it. See the
+[electronics write-up](../electronics/README.md) for the wiring side of that decision.
+
+---
+
 ## Directory layout
 
 ```
