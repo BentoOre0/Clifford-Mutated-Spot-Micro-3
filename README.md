@@ -155,7 +155,7 @@ attribution or the comparison mean anything.
 [Instructables](https://www.instructables.com/Nova-Spot-Micro-a-Spot-Mini-Clone/).
 MIT licensed, see [LICENSE](LICENSE), Copyright (c) 2021 Christopher M. Locke.
 
-The robot, its gaits, its servo motion engine and its master/slave architecture are his.
+The robot, the pcB, its gaits, its servo motion engine and its master/slave architecture are his.
 The wiring diagram here is a revision of his v5.2b pictogram: the base artwork is his and
 the revisions are mine.
 
@@ -163,10 +163,7 @@ the revisions are mine.
 [mechanical write-up](mechanical/README.md) is a manufacturer product image from a retail
 listing, reproduced for comparison only. It is not my photograph.
 
-**Third-party parts.** Thingiverse user **Ozzymat**'s
-[Nova SM3 electronics-mounting remix](https://www.thingiverse.com/thing:7131451) (CC BY-SA)
-was a reference for mounting the PCA9685 and the buck converter. Those parts are not
-included here and are not my work.
+**Third-party parts.** **Ozzymat**'s [Youtube](https://www.youtube.com/@ozzymat61) was a reference for looking at physical assemblies of the original NOVA which is different. I used this as insiration for ideas on how I can make a physically new part.
 
 **Leg redesign, electronics and v6.0 firmware restructure: Jeremy Aidan Yu.** The v6.0
 restructure was done with Claude Code, which is stated here, in the firmware write-up and
