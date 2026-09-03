@@ -1,28 +1,19 @@
-# The firmware tree tracks code only.
+# This repository tracks the firmware source plus the curated hardware
+# documentation for THIS fork: my modified CAD, the before/after comparison
+# figures, the corrected wiring drawing and the build photography.
 #
-# Upstream's bulk binary assets - the full printable STL set, the original
-# wiring diagrams, the MP3s, the photos and the parts list - are large
-# (~212MB) and unchanged from upstream, so they are deliberately not tracked.
-# Get them from the upstream project if you need them:
+# Upstream's bulk binary assets (the full printable STL set, the original
+# wiring diagrams, the MP3s and the parts list) are large and unchanged from
+# upstream, so they are deliberately not tracked. Get them from:
 #
 #   https://github.com/cguweb-com/Arduino-Projects/tree/main/Nova-SM3
 #
-# The curated hardware documentation for THIS fork - my modified CAD, the
-# before/after comparison figures and the build photography - lives under
-# hardware/ and IS tracked. See hardware/cad/README.md.
-#
-Nova-SM3/STL Files/
-Nova-SM3/Wiring/
-Nova-SM3/MP3/
-Nova-SM3/Remote Control/
-Nova-SM3/*.jpg
-Nova-SM3/*.png
-Nova-SM3/*.psd
-Nova-SM3/*.xlsx
-Nova-SM3/*.html
-Nova-SM3/README.md
+Nova-SM3/
 
 # Arduino build output
 build/
 *.hex
 *.elf
+
+# scratch / working files
+*.tmp
