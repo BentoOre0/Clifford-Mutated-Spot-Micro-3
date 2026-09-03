@@ -21,7 +21,7 @@ step-down converter with its toroidal inductor and finned heatsinks sits above i
 </tr>
 <tr>
 <td colspan="2"><em>Left: the Nova SM3 controller board after I populated and soldered it,
-before installation. It is the project's own PCB, not an off-the-shelf module: JST servo
+before installation. It is the Chris' project's own PCB (which I had to adopt by rerouting components), not an off-the-shelf module: JST servo
 headers, an Arduino Nano, an MPU6050 breakout, a DIP switch and screw terminals. Right: the
 same board fitted in the chassis beside the converter. The masking-tape labels reading
 <code>+VCC / SDA / SCL / OE / GND</code> are mine, written during bring-up so the I2C and
