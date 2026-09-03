@@ -208,10 +208,15 @@ then wire DAT back to the Teensy."* The failure mode is nasty because the receiv
 on 5 V. It just quietly destroys the microcontroller through the data line. The corrected
 drawing accordingly puts the receiver's VCC on 3.3 V.
 
-**`OE_PIN` is active LOW, and boot order matters.** Driving OE low *enables* the servos. It
-is held high through boot until the PS2 link is up, because the PWM driver interferes with
-the receiver; without that sequencing the robot lurches on power-up. Servo output arms about
-a second after boot.
+**`OE_PIN` is active LOW, and boot order matters.** Driving OE low *enables* the servos,
+which `Test_PWM_Servos.ino` confirms behaviourally: `digitalWrite(OE_PIN, on ? LOW : HIGH)`.
+It is held high through boot until the PS2 link is up, and the original author's DEV NOTE
+says why: the PWM driver interferes with the receiver badly enough that the remote fired
+**all buttons at boot**, sending the robot random movement commands the moment it powered
+on. Output arms at the end of PS2 initialisation, not on a fixed delay.
+
+The inherited v5.1 code documented this pin as `//PWM Output Enable pin` and said nothing
+about polarity, which is exactly why it is called out here.
 
 **Current sense and battery sense share one pin.** `AMP_PIN` and `BATT_MONITOR` are both
 **A1**. The robot physically cannot measure servo current and battery voltage at the same

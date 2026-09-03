@@ -298,8 +298,12 @@ damage the Teensy through its DATA line.
 
 **`OE_PIN` is active LOW.** Driving it LOW *enables* the servos. It is held HIGH
 through boot until the PS2 link is up, because the PWM driver interferes with the
-receiver and would otherwise make the robot lurch on power-up. Servo output arms
-roughly a second after boot.
+receiver. The original author's DEV NOTE records what that actually caused: the remote
+firing *all buttons* at boot, and the robot going haywire on random movement commands.
+Servo output arms at the end of PS2 initialisation, in `Ps2Remote.ino`, not on a timer.
+
+The polarity is worth stating because v5.1 did not: it documented this pin only as
+`//PWM Output Enable pin`, with no mention that LOW is the enabling level.
 
 **`servoHome[]` and `servoLimit[]` in `NovaServos.h` are physical measurements** of
 one assembled robot, in raw PWM ticks. They are not tunable constants. If a leg sits
