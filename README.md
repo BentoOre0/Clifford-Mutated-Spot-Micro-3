@@ -1,4 +1,4 @@
-# Clifford
+# Clifford: Mutated Spot Micro 3
 
 <p align="center">
   <img src="media/clifford-walkaround.gif" width="520" alt="Clifford, assembled, on the bench stand">
