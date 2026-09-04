@@ -84,30 +84,21 @@ the artifact cannot drift apart the way the upstream pair did.
 
 ## Revision 1: cascaded converters reworked to parallel
 
-**The symptom.** Startup was inconsistent. Putting a multimeter across the buck converter
-output, the voltage came up differently from one power-on to the next. But when I bypassed
-the normal startup path and hot-wired the converter straight to the pack, it read steady
-every time.
+**The symptom.** Startup was inconsistent. When I connected the ps2 controller and the servo driver to the pcb
+while powering it, it would inconsistently start up. MCUs would not even power sometimes.
+However if I didn't plug them in or plugged them in hot, these components would turn on.
 
-**The hypothesis.** A rail that is fine on a direct connection and misbehaves when brought
-up through its own supply path is not a dead converter. That difference is a **source
-impedance** problem: something upstream was sagging under the startup load that the pack
-itself did not. Which meant the answer was in the power tree, so the power tree was what I
-went and read.
+**The hypothesis.** - one thing that I could see for sure is that there was a consistent start up problem. When I put the 
+ps2 controller and servo driver it would have a hard time starting up despite drawing only very little amps (don't remember the number).
+I thought there could be some **impedance** problem between the bucks and all components: testing with multi meter I saw the 6.8V buck converter sagged 
+causing the voltage down stream to sag as well. 
 
 **What the reference design did.** The XL6009 5.4 V converter took its input from the
 **6.8 V converter's output block**. The two converters therefore ran **in series**.
 
-**Why that is wrong here.** Everything downstream of the XL6009 inherits the 6.8 V stage's
-droop under load and pays two sets of conversion losses. With twelve servos pulling hard on
-the same pack, that is precisely the arrangement that turns a servo current transient into
-a brownout on the logic rails.
-
 **The fix.** I moved the XL6009 input **off** the 6.8 V output block and onto the switched
 battery pair at the 6.8 V buck input. **Both converters now run in parallel off the pack**,
-so neither sees the other's output impedance, which is exactly the thing the startup
-behaviour had pointed at. The rework also freed one VIN and one GND terminal, and startup
-became repeatable.
+so neither sees the other's output impedance.
 
 > Revision 1, in the drawing's own words: *"XL6009 5.4V converter: input moved OFF the 6.8v
 > Output 'VIN' block. +IN / -IN now tap the switched battery pair at the 6.8V buck input, so
