@@ -8,11 +8,11 @@
 
 Before any diagrams, this is the real thing:
 
-![Electronics bay, installed](media/electronics-bay-installed.jpg)
+![Electronics installed](media/electronics-bay-installed.jpg)
 
 *Looking down into the open electronics bay of the assembled robot. The controller PCB is
 at the bottom of the frame with the servo harnesses running out to the legs, and the
-step-down converter with its toroidal inductor and finned heatsinks sits above it.*
+step-down converter sits above it. I hadn't soldered initensively before, I soldered everything here (PCB, MCUs, XT60 connectors) and tested connections.*
 
 <table>
 <tr>
@@ -32,8 +32,7 @@ time.</em></td>
 
 **What has to be powered:** twelve servos, two microcontrollers, an IMU, three PIR sensors,
 two ultrasonic sensors, an OLED, four addressable RGB LEDs, an MP3 player and a speaker,
-all from one LiPo pack. Servos dominate, and the transient when a gait starts is the worst
-case. That is the constraint everything else has to survive.
+all from one LiPo pack. 
 
 ---
 
@@ -43,31 +42,24 @@ The upstream project ships two wiring documents, a **schematic** and a **pictogr
 they do not agree with each other. The schematic is accurate. The pictogram belongs to an
 older, deprecated revision, and following it as drawn does not give you a working robot.
 
-Finding that out is not something you can do by reading. Both drawings had to be printed
-and every net traced by hand against the real board.
 
 ![Schematic used as a test sheet](wiring/schematic-continuity-check.jpg)
 
 *Chris Locke's REV 5.1 schematic, printed and used as a live test sheet. This is the
 drawing that held up under testing, which is why it became my reference. Blue ticks are
-nets I confirmed with a multimeter, green highlighter follows the ones I was chasing, the
+nets I confirmed with a multimeter, green highlighter follows the ones I was chasing to get an understanding of the structure, the
 PS2-COM header is hand-labelled DAT / CMD / SEL / CLK because that mapping had to be worked
-out, and `cont gnd` with a tick at the bottom records ground continuity confirmed.*
+out, and `cont gnd` with a tick at the bottom records ground continuity confirmed. I did this by doing a disjoint set union approach for continuity.
+The ports for grounds werenodes, the traces between them are edges, just run DSU and make sure everything is continuous!*
 
-Checked against that, the pictogram did not hold up:
 
 ![Pictogram traced by hand](wiring/wiring-diagram-annotated-by-hand.jpg)
 
-*The v5.2b pictogram, traced in highlighter along the power path with pen notes throughout:
-`6.8 in` and `5.4 out` at the XL6009, `No D23!` where a pin does not exist, circles around
-the PIR sensors, the RGB dimmer pot and the OLED power, and the PIR pin question
-`D6 - Right, D5 - Left, D4 - Front ?`.*
+*The v5.2b pictogram, traced in highlighter along the power path with pen notes throughout*
 
-That last question resolved itself in code: `Test_PIR.ino` defines `PIR_FRONT 4`,
-`PIR_LEFT 5`, `PIR_RIGHT 6`, so the pencilled guess was right.
-
-The output of all of this tracing is a **corrected pictogram**, which carries its own
-revision block:
+I found quite a few errors, some by tracing and some by physical building and realising things didnt turn on consistently.
+The output of all of this is a **corrected pictogram**, which carries its own
+revision block that also shows my modifications:
 
 ![Revision block](wiring/wiring-revision-notes.png)
 
@@ -88,7 +80,7 @@ the artifact cannot drift apart the way the upstream pair did.
 while powering it, it would inconsistently start up. MCUs would not even power sometimes.
 However if I didn't plug them in or plugged them in hot, these components would turn on.
 
-**The hypothesis.** - one thing that I could see for sure is that there was a consistent start up problem. When I put the 
+**The hypothesis.** - one thing that I could see for sure is that there was a consistent **inconsistent** start up problem. When I put the 
 ps2 controller and servo driver it would have a hard time starting up despite drawing only very little amps (don't remember the number).
 I thought there could be some **impedance** problem between the bucks and all components: testing with multi meter I saw the 6.8V buck converter sagged 
 causing the voltage down stream to sag as well. 
@@ -111,15 +103,9 @@ This is the fault that made the exercise worth doing. On the pictogram, **the PI
 drop terminated on the `VIN PIR, PS2, SW` +5 V rail** instead of the ground rail.
 
 Wired as drawn, that ties a ground return straight to a +5 V rail, which is a short across
-the sensor supply. It is not subtle in its effects, but it is very easy to miss on a dense
-pictogram, because the two rails run parallel and that crossing looks like every other
-crossing on the sheet. It is also the sort of error that survives in a document precisely
-because nobody rebuilds from the pictogram once the board works.
+the sensor supply.
 
-So I fixed both the fault and the reason it was missable: the ground drop now lands on the
-GND rail, and **the four remaining +5 V / GND crossings were redrawn as explicit
-over-under**, with a white break showing the wire passing in front. On the corrected drawing
-a crossing can no longer be read as a junction.
+So I fixed it. I mentioned the changes I wanted to claude and it ran the photoshop for me.
 
 ## Revisions 3 to 5: component substitutions
 
