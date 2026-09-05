@@ -17,16 +17,11 @@ U-shaped metal bracket**, and the bracket is how it attaches to anything.
 
 ![DS3218 against RDS3218](media/servo-mounting-comparison.jpg)
 
-*The whole project in one image. On the DS3218 the mounting tabs are moulded into the case,
+*The whole mechanical project in one image. On the DS3218 the mounting tabs are moulded into the case,
 so a printed part bolts directly to the servo. The RDS3218 has none, and is instead
 suspended in a separate metal bracket, which means the printed part has to capture the
 bracket rather than the servo. The DS3218 photograph is a manufacturer product image
 reproduced for comparison and is not my own.*
-
-So this was never a case of opening out a hole or shaving a wall. **The entire mounting
-scheme the parts were designed around does not exist on the part I had.** Every feature
-that held a servo was holding onto something that was no longer there, which meant each
-leg part had to be redesigned from scratch.
 
 **The servos, all 270 degrees:**
 
@@ -44,10 +39,7 @@ leg part had to be redesigned from scratch.
 
 The horn is where the joint axis lives. Shift it a few millimetres and every link length
 in the leg changes, and the hand-tuned gait multipliers in
-[`Gaits.ino`](../firmware/Nova-SM3_teensy-v6.0/Gaits.ino) stop describing the robot. There
-is no inverse kinematics in this firmware to absorb that, so the geometry has to be right.
-
-Everything else is structure, and structure can be rebuilt.
+[`Gaits.ino`](../firmware/Nova-SM3_teensy-v6.0/Gaits.ino) stop describing the robot. (Goal is to minimise this)
 
 ---
 
@@ -66,8 +58,7 @@ bottom face of the part.
 **3. A clearance cut for the far end.** The RDS3218 has a protrusion on the end opposite
 the horn, the mating feature for the other side of the U bracket. That protrusion turned
 out to be **axially aligned with the servo horn and with the bearing boss**, which meant a
-single extrude cut along that axis cleared it. A piece of luck in the original design's
-favour, and the reason that end did not need rebuilding too.
+single extrude cut along that axis cleared it. 
 
 ![RDS3218 sitting in its U bracket](media/rds3218-in-u-bracket.jpg)
 
@@ -94,8 +85,8 @@ pieces. The servos are visible sitting in their brackets.</em></td>
 ## How the parts were modified
 
 The parts are not redrawn from scratch in CAD, and not mesh-edited either. The workflow
-was chosen to **preserve geometry that still worked**, in particular the TPU foot mounting
-holes, which were among the few original components I could still use:
+was chosen to **preserve geometry that still worked**, in particular the TPU foot mounting and the servo horn mounting
+holes and shape of legs, which were among the few original components I could still use:
 
 1. **Tinkercad** for the rough cutting and the crude changes, working directly on the
    original STL. Fast, and good enough to hack away what the new servo made irrelevant
@@ -123,10 +114,6 @@ and feature operations behind it.</em></td>
 </tr>
 </table>
 
-Because the changes are parametric features on an imported body rather than a one-way mesh
-edit, a different servo could be accommodated by editing a sketch dimension instead of
-starting over.
-
 ---
 
 ## Part by part
@@ -143,13 +130,6 @@ All dimensions and volumes below are **measured from the mesh geometry** of the 
 | Envelope | 37.59 x 46.13 x 57.50 mm | 37.45 x 49.77 x 57.97 mm | +3.64 mm across |
 | Volume | 23.88 cm3 | 26.21 cm3 | +9.8% |
 
-**The envelope along the joint axis changes by 0.14 mm.** That is the horn interface being
-held. The 3.64 mm of growth is all transverse, which is the pocket opening up for a servo
-in a bracket.
-
-Structurally the original's full-height flat back plate with an overhanging two-hole ear
-becomes a stepped C-bracket: a narrow vertical web, a broad cantilevered top shelf, and a
-separate lower foot with a boss.
 
 ![Coax servo pocket](cad/comparisons/coax-servo-pocket.png)
 
@@ -161,8 +141,8 @@ pattern, completely different pocket.**
 ![Femur comparison](cad/comparisons/femur-comparison.png)
 
 The original femur is **two printed parts that bolt together**, a structural frame and a
-cover. Mine is also two parts. Nothing was merged; the split was kept because it works and
-because it makes the part printable.
+cover. Mine removes the cover and uses the same bolting mate while using the 2 protrusions
+to hold the bracket and holes from the coax to hold the servo.
 
 | | Original | Mine |
 |---|---|---|
@@ -170,29 +150,24 @@ because it makes the part printable.
 | Part 2 | `SM3_Cover_LeftFemur`, 33.26 cm3 | `modified_femur_body-2`, 66.15 cm3 |
 | **Assembly total** | **99.28 cm3** | **156.88 cm3** |
 
-**+58% volume.** That is the honest cost of the substitution: the RDS3218 in its U bracket
-is a physically larger thing to carry than a DS3218 bolted through four holes, and the
-structure around it grew accordingly.
 
 ![The joint between the two femur parts](media/femur-two-part-joint.jpg)
 
-*The seam on the assembled robot. The two femur parts meet along that line, with a tie
-around the joint and a screw boss visible below it.*
 
 ### Why both femur halves live in one file
 
 The two bodies are modelled together in a **single SolidWorks part document**, not as an
-assembly of two parts, and that was a deliberate compromise rather than laziness.
+assembly of two parts, and that was a deliberate.
 
 The obvious approach is an assembly: two part files, mated together. That does not work
 well here. These bodies start life as **imported STL geometry**, which arrives with no
-sketches, no datums and nothing fully defined, so there is nothing dependable to mate
+sketches, and nothing fully defined, so there is nothing dependable to mate
 against. Aligning them that way was, in practice, very tricky and not trustworthy.
 
 Modelling both halves in one document solves it. Each half can be **built off the other**
 directly, because they share one origin and both are visible at once while working.
-Alignment stops being something an assembly has to maintain and becomes a property of the
-model. They are then spaced far enough apart in that same document to be printable exactly
+
+They are then spaced far enough apart in that same document to be printable exactly
 as they sit, which is why the file doubles as the print plate.
 
 ![Femur mating features](cad/modified/solidworks/femur-mating-features.jpg)
@@ -202,9 +177,8 @@ printing and modelled against each other. The block protrusions on the facing su
 the mating features.*
 
 **How the halves join:** a **block protrusion** locates the two parts against each other,
-and a screw pulls them together onto a **nut hidden inside the print**, sitting in a pocket
-that closes over as the part is built. Nothing protrudes, and no nut has to be held with a
-spanner during assembly.
+and a screw pulls them together onto a **nut**, sitting in a pocket
+that closes over as the part is built. 
 
 [`modified_femur_plate.stl`](cad/modified/modified_femur_plate.stl) is that document
 exported, and it is the file that was actually printed. `modified_femur_body-1.stl` and
@@ -223,16 +197,14 @@ on its own. The geometry is untouched; only the file container differs.
 
 The tibia is a **single printed part** in both designs. The original is a slim curved arm
 with a knee bore at one end and a light bracket at the other. Mine keeps the curved lower
-arm, the triangular lightening cutout and **the whole foot end with its TPU foot mounting**,
+arm and **the whole foot end with its TPU foot mounting**,
 and replaces the light knee bracket with a full enclosure for the 35 kg.cm RDS3235.
 
-That foot end being carried across is the Tinkercad step paying off: it was worth preserving
-exactly, so it was cut around rather than redrawn.
+I used the same mating mounts with the two protrusions and the extrude cut by the bearing boss.
 
 ![Tibia in SolidWorks](cad/modified/solidworks/tibia-solidworks.png)
 
-*The tibia in SolidWorks (`legbottom2`). The boxy knee-end servo enclosure is new; the
-tapering lower arm and foot end below it come from the original.*
+*The tibia in SolidWorks (`legbottom2`).*
 
 ---
 
@@ -248,10 +220,10 @@ display visible on the assembled robot, and the original panel was not big enoug
 it. So the panel was **enlarged** to carry the meter, and while it was being redrawn it
 also became the mounting point for the receiver.
 
-Rather than draw an enclosure from nothing, I took the **backpack from the Nova SM2**, the
+Rather than draw an enclosure for the PS2 remote from nothing, I took the **backpack from the SM2 version**, the
 earlier robot in the same lineage, and put it on that panel. It houses the receiver and
 **sticks out of the back like a tail**, which keeps the antenna outside the printed body
-and out of the electronics bay.
+and out of the electronics bay from interference.
 
 The panel uses the same fastening approach as the femur: **hidden nuts and screws**, with
 the nuts captured inside the print rather than exposed on the outside face.
@@ -270,21 +242,12 @@ backpack on the outside of the body while presenting a clean face on the inside.
 
 ![The tail on the assembled robot](media/sm2-backpack-tail.jpg)
 
-*The black module protruding from the top rear of the body.*
+*The black module protruding from the top rear of the body is the ps2 remote receiver.*
 
 **Fitting it was hand work, not CAD.** The mounting holes were **melted through with a
-soldering iron** rather than printed or drilled. Brass **heat-set threaded inserts** were
+soldering iron (hehehe)** rather than printed or drilled. Brass **heat-set threaded inserts** were
 melted into those holes with the same iron, and the assembly was secured with those and
-nuts. That is not the elegant solution and I am not going to present it as one, but
-merging two parts from different revisions of a project is exactly where a printed part
-stops agreeing with a model, and a soldering iron is a reasonable answer to a hole that
-needs to be in a slightly different place than the file says.
-
-The archived panel is `finalnewbackpanel_fixed.stl` from my working set: the `_fixed`
-suffix is the mesh-repair step from the
-[workflow above](#how-the-parts-were-modified). The unrepaired version has the same
-envelope and the same 8.62 cm3 volume with 476 fewer triangles, so only the shell integrity
-differs.
+nuts. That is not the elegant solution and I am not going to present it as one. I wanted a quick fix. This can be changed.
 
 ---
 
@@ -292,7 +255,7 @@ differs.
 
 ![First assembly of the printed chassis](media/printed-chassis-first-assembly.jpg)
 
-*The printed structure assembled for the first time, before any electronics. Red tibias,
+*The printed structure assembled for the first time, before any electronics (except servos). Red tibias,
 grey femurs and coax brackets.*
 
 ---
@@ -301,7 +264,7 @@ grey femurs and coax brackets.*
 
 ### [`cad/original/`](cad/original/): Chris Locke's, unmodified
 
-Kept under upstream filenames, byte-for-byte as published, and never edited in place. Only
+Kept under upstream filenames and never edited in place. Only
 the parts with a modified counterpart, or that I reused directly, are mirrored here. The
 two `SM2_` files are the backpack, which comes from the earlier Nova SM2 rather than from
 the SM3 set.
@@ -334,8 +297,7 @@ versions; the STLs are exports.
 
 ### [`cad/modified/solidworks/`](cad/modified/solidworks/)
 
-Screenshots of the models and their feature trees, which is where the provenance is
-visible.
+Screenshots of the models and their feature trees of modified parts.
 
 | Screenshot | Document | Shows |
 |---|---|---|
