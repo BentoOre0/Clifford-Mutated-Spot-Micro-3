@@ -35,15 +35,12 @@ It hangs in a **U-shaped metal bracket** instead.
 
 ![DS3218 against RDS3218](mechanical/media/servo-mounting-comparison.jpg)
 
-That is not a tolerance problem you solve by opening a hole out by half a millimetre. The
-mounting scheme every leg part was built around simply does not exist on the replacement
+PROBLEM: The mounting scheme every leg part was built around simply does not exist on the replacement
 part. The pockets, the bosses and the screw features were all designed to grip something
 that no longer had anything to grip.
 
-So each leg part had to be redesigned from scratch around a completely different way of
-holding a servo, while keeping the one thing that could not move: **the servo horn, which
-is where the joint axis lives.** Move that and every link length changes, and the gait
-tuning in the inherited firmware becomes meaningless.
+SOLUTION: Each leg part had to be redesigned from scratch around a completely different way of
+holding a servo, while keeping the servo horn geometry and axis position (To the best of my ability).
 
 **Twelve servos, all 270 degrees:** 8x RDS3218 at 20 kg.cm for the coax and femur joints,
 4x RDS3235 at 35 kg.cm for the knees.
@@ -112,21 +109,9 @@ Being straight about where this actually is:
 | Per-subsystem bench tests | Passing |
 | PS2 receiver verified against live serial output | Yes |
 | Firmware v6.0 restructure | Complete, compiles clean for both boards |
-| **Servo recalibration for my servos** | **Not done** |
+| **Servo recalibration for my servos** | **Not done had to fly out to UBC** |
 | **Walking** | **Not working yet** |
 
-Those last two are one problem, and it is the most interesting open item in the project.
-
-`NovaServos.h` still contains Chris Locke's `servoHome[]` and `servoLimit[]` values. I
-checked: they are byte-identical to v5.1. Those numbers are physical measurements of *his*
-robot, in raw PWM ticks, for *his* servos in *his* leg geometry. Mine has different servos,
-with different travel, in legs I redrew. The numbers do not describe this machine, and the
-gaits are hand-tuned against them, which is exactly why locomotion is the piece that does
-not work.
-
-The fix is not a code change. It is bench work with
-[`Nova-SM3-calibrate/`](firmware/Nova-SM3-calibrate/) to re-measure home and limit
-positions for all twelve joints, then re-tuning from there.
 
 ---
 
@@ -141,8 +126,7 @@ firmware/        the Arduino sketches and the v6.0 write-up
 
 Chris Locke's original geometry lives in
 [`mechanical/cad/original/`](mechanical/cad/original/) under his filenames and is never
-edited in place. Keeping it intact beside mine is the only thing that makes either the
-attribution or the comparison mean anything.
+edited in place. 
 
 ---
 
