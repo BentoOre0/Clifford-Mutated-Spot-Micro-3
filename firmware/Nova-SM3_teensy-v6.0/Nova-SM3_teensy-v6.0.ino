@@ -85,21 +85,21 @@
 #include "NovaConfig.h"
 
 //include supporting libraries
-#include <Wire.h>
-#include <PS2X_lib.h>
-#include <Adafruit_PWMServoDriver.h>
-#include <T4_PowerButton.h>
-#include "SoftwareSerial.h"
-#include "DFRobotDFPlayerMini.h"
+#include <Wire.h> // for i2c
+#include <PS2X_lib.h> //for ps2 remote reciever
+#include <Adafruit_PWMServoDriver.h> //pwm servo driver library
+#include <T4_PowerButton.h> //teensy specific one
+#include "SoftwareSerial.h" //Software Serial is the library i use for uart over to mp3 player
+#include "DFRobotDFPlayerMini.h" //mp3 speaker library
 
 //named constants for every byte sent to the Nano slave over i2c.
 //included early so the RGB_* / OLED_* macros are defined before first use.
-#include "NovaSlaveProtocol.h"
+#include "NovaSlaveProtocol.h" //slave protocol
 
 //one row of the serial help screen. Declared up here because the Arduino
 //builder generates function prototypes near the top of the sketch, so any
 //type used in a function signature must already be visible at this point.
-struct HelpRow { const char* input; const char* what; };
+struct HelpRow { const char* input; const char* what; }; //for debugging
 
 /*
    =======================================================
@@ -123,8 +123,15 @@ struct HelpRow { const char* input; const char* what; };
     :why min_spd (96) is numerically larger than max_spd (1).
    -------------------------------------------------------
 */
-Adafruit_PWMServoDriver pwm1 = Adafruit_PWMServoDriver(0x40);
-byte pwm_oe = 0;                  //1 once servo output has been enabled - see ps2_check()
+Adafruit_PWMServoDriver pwm1 = Adafruit_PWMServoDriver(0x40); //0x40 is i2c address
+byte pwm_oe = 0;                  //LEAVE AT 0 code sets this to 1 once servo output has been enabled - see ps2_check()
+
+//SERVO CONTROL STUFF HERE specifically how quickest the smallest
+//pulse width is changed! AsynchServo.h nudges the servo to its postion
+// spd is the bound between nudges and updates (over millis()) 
+
+
+//essentially bounds over timing updates for the servo can't be too long or too short.
 
 const float min_spd = 96.0;       //slowest allowed: the longest gap between ticks
 const float max_spd = 1.0;        //fastest allowed: the shortest gap between ticks
@@ -135,6 +142,20 @@ float spd_prev = default_spd;     //saved across a routine that changes speed te
 //spd_factor scales the per-servo speeds inside the movement routines, so that
 //raising the global speed speeds up a whole gait proportionally. It is
 //recalculated from spd by set_speed().
+
+
+/*
+Educational Note to self:
+
+each joint has a speed
+and a mutiplier applied to all of them
+
+for like walking gates that they have from this project
+
+we can do the movement slowly than push it up or down using this factor
+
+Gait > which legs move and in what order
+*/
 float spd_factor = 1.0;
 const float min_spd_factor = 5.0;
 const float max_spd_factor = 0.5;
@@ -145,11 +166,16 @@ float spd_f;                      //femur
 float spd_t;                      //tibia
 
 //steering input, in the -22..22 range the sticks are mapped into
+//FROM PS2 not mpu 6050
 float x_dir = 0;                  //+right / -left
 float y_dir = 0;                  //+forward / -backward
-float z_dir = 0;                  //+up / -down (ride height)
+float z_dir = 0;                  //+up / -down (ride height) (button rpessed down or not)
 
 //acceleration / deceleration, applied by set_ramp()
+
+//ramping -> accelerating at the start, decelerating at the end, cruising at the middle
+
+
 byte use_ramp = 0;                //nothing ramps unless this is set
 float ramp_dist = 0.20;           //fraction of the travel spent ramping at each end
                                   //(0.20 = accelerate over the first 20%, decelerate over the last 20%)
@@ -238,6 +264,8 @@ const int MPU = 0x68;
 unsigned int mpuInterval = 10;
 unsigned int mpuInterval_prev = 400;  //slower interval used for the very first read
 unsigned long lastMPUUpdate = 0;
+
+//sensor fused values from mpu6050
 float mroll, mpitch, myaw;            //current fused attitude, in degrees
 float mroll_prev, mpitch_prev;        //previous values, for the trigger threshold
 float accAngleX, accAngleY, gyroAngleX, gyroAngleY;
