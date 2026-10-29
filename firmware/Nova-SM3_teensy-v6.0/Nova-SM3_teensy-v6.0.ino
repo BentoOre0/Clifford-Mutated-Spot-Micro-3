@@ -195,9 +195,12 @@ float ramp_spd = 5.00;            //how much slower than cruising speed a ramp s
 */
 static const uint8_t PIN_MP3_TX = 1;
 static const uint8_t PIN_MP3_RX = 0;
-SoftwareSerial softwareSerial(PIN_MP3_RX, PIN_MP3_TX);
-DFRobotDFPlayerMini DFPlayer;
 
+//teensy 4.0 pins 1 and 0 go uart to mp3 player
+SoftwareSerial softwareSerial(PIN_MP3_RX, PIN_MP3_TX); //uart tx, rx!
+DFRobotDFPlayerMini DFPlayer; //mp3 object
+
+//comments here are self explanatory
 unsigned int mp3Interval = 50;
 unsigned long lastMP3Update = 0;
 int mp3_queue[5] = {0,0,0,0,0};   //tracks waiting to play, so nothing blocks
@@ -217,8 +220,12 @@ unsigned long lastPotUpdate = 0;
 /*
    -------------------------------------------------------
    PIR motion sensors and follow mode
+
+   PIR output high when motion detected low when idle
    -------------------------------------------------------
 */
+
+
 unsigned int pirInterval = 150;
 unsigned long lastPIRUpdate = 0;
 unsigned int pirDelay = 3;        //cycles of the state machine, NOT milliseconds
@@ -243,6 +250,7 @@ int follow_dir_prev = 0;
 */
 unsigned int ussInterval = 250;
 unsigned long lastUSSUpdate = 0;
+//CHECK ULTRA SONIC SENSORS (USS) via I2C from nano
 int distance_alarm = 10;              //cm at which an obstacle counts as too close
 int distance_alarm_set = 0;           //consecutive triggers, to reject one-off bad reads
 int distance_tolerance = 5;           //cm a reading must change by before it is believed
@@ -260,7 +268,15 @@ int uss_is_active = uss_active;       //the user's setting, so routines can rest
     :results and the state get_mpu() keeps between reads
    -------------------------------------------------------
 */
-const int MPU = 0x68;
+const int MPU = 0x68; //i2c address of mpu
+
+/*
+Data looks like this
+Raw:    ax=   210  ay=  -95  az= 16250  gx=  40  gy= -15  gz=  8
+Scaled: ax= 0.01g  ay=-0.01g az= 0.99g  gx=0.3°/s gy=-0.1°/s gz=0.06°/s
+Temp:   27.4 °C
+*/
+
 unsigned int mpuInterval = 10;
 unsigned int mpuInterval_prev = 400;  //slower interval used for the very first read
 unsigned long lastMPUUpdate = 0;
@@ -291,6 +307,7 @@ int ps2_select = 1;               //active button set, 1-4, cycled by SELECT
 //NOTE: set this to 1 here (before flashing) to poll the controller with servo
 //      output left DISABLED - lets the remote be checked on the bench without
 //      the robot standing up. Toggling it via serial does not touch pwm_oe.
+
 byte ps2_debug = 0;
 unsigned int ps2DebugInterval = 120;    //throttles analog stick reporting
 unsigned long lastPS2Debug = 0;
